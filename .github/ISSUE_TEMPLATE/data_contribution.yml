@@ -1,0 +1,89 @@
+name: Data Contribution
+description: Contribute accurate station data or travel times
+title: "[DATA] "
+labels: ["data-needed"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        🙏 Thank you for helping improve Rayda's accuracy with real data!
+        
+        We especially need:
+        - Accurate station coordinates
+        - Inter-station travel times
+        - Route geometry verification
+
+  - type: dropdown
+    id: data-type
+    attributes:
+      label: Data Type
+      description: What type of data are you contributing?
+      options:
+        - Station Coordinates
+        - Travel Times
+        - Route Geometry
+        - Schedule Information
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: station-data
+    attributes:
+      label: Station Information
+      description: If contributing station data, please provide station name and coordinates
+      placeholder: |
+        Station Name: Üsküdar
+        Coordinates: [29.015278, 41.025]
+        Source: GPS measurement / Official map / etc.
+
+  - type: textarea
+    id: travel-times
+    attributes:
+      label: Travel Time Data
+      description: If contributing travel times, please provide the route segment and timing
+      placeholder: |
+        From: Üsküdar
+        To: Ayrılık Çeşmesi
+        Travel Time: 2 minutes 30 seconds
+        Direction: Both / Towards Gebze / Towards Halkalı
+        Source: Personal timing / Official timetable / etc.
+
+  - type: textarea
+    id: source
+    attributes:
+      label: Data Source
+      description: How did you obtain this data? (GPS measurement, official documents, personal observation, etc.)
+      placeholder: Describe your data source and method...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: confidence
+    attributes:
+      label: Confidence Level
+      description: How confident are you in the accuracy of this data?
+      options:
+        - Very High (Official source/GPS measurement)
+        - High (Multiple observations)
+        - Medium (Single observation)
+        - Low (Approximate/estimated)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: verification
+    attributes:
+      label: Verification
+      options:
+        - label: I have verified this data through multiple sources or measurements
+        - label: I understand this data will be used by other commuters and should be accurate
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Notes
+      description: Any additional context about the data
+      placeholder: Time of day collected, weather conditions, etc.
