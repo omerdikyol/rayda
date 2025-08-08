@@ -16,11 +16,12 @@ Rayda is a real-time simulation web application for the Marmaray train line in I
 ## Architecture
 
 ### Tech Stack
-- **Frontend**: React 18+ with TypeScript
+- **Frontend**: React 19 with TypeScript 5.8
 - **Mapping**: Mapbox GL JS for interactive map and train animations
 - **State Management**: Zustand for simulation state
-- **Styling**: Tailwind CSS with Radix UI components
+- **Styling**: Tailwind CSS with Radix UI components (dropdown-menu, select, tooltip)
 - **Build Tool**: Vite
+- **Date Utilities**: date-fns for time calculations
 
 ### Core Data Flow
 The app simulates train movement using a time-based calculation system:
@@ -56,3 +57,7 @@ The core simulation works by:
 
 ### Data Requirements
 Station coordinates and inter-station travel times need to be populated with accurate data from official sources. Current data in src/data/stations.ts are placeholders.
+
+### Environment Configuration
+Required environment variable for Mapbox:
+- `VITE_MAPBOX_ACCESS_TOKEN` - Your Mapbox access token (set in .env.local)
