@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "description": "Station name variations found in different data sources",
+    "purpose": "Reference for handling inconsistent station naming across official sources"
+  },
+  "name_variations": {
+    "florya_akvaryum": {
+      "official_name": "Florya Akvaryum",
+      "variations": ["Akvaryum", "Florya Aquarium"],
+      "note": "Often abbreviated as just 'Akvaryum' in timetables"
+    },
+    "kucukcekmece": {
+      "official_name": "Küçükçekmece",
+      "variations": ["Küçük çekmece", "Kucukcekmece"],
+      "note": "Space and character encoding variations"
+    },
+    "osmangazi": {
+      "official_name": "Osmangazi",
+      "variations": ["Osman gazi", "Osman Gazi"],
+      "note": "Sometimes written as two words"
+    },
+    "ayrilik_cesme": {
+      "official_name": "Ayrılıkçeşme", 
+      "variations": ["Ayrılık Çeşmesi", "Ayrılık Ç", "Ayrilik Cesme"],
+      "note": "Multiple spelling variations with different spacing and characters"
+    },
+    "kazlicesme": {
+      "official_name": "Kazlıçeşme",
+      "variations": ["Kazlı Çeşme", "Kazli Cesme"],
+      "note": "Space and character encoding variations"
+    },
+    "sogutlucesme": {
+      "official_name": "Söğütlüçeşme",
+      "variations": ["Söğütlü çeşme", "Söğütlü Ç", "Sogutlu Cesme"],
+      "note": "Multiple abbreviations and encoding variations"
+    }
+  },
+  "standardized_names": [
+    "Gebze", "Darıca", "Osmangazi", "Fatih", "Çayırova", "Tuzla", "İçmeler",
+    "Aydıntepe", "Güzelyalı", "Tersane", "Kaynarca", "Pendik", "Yunus", "Kartal",
+    "Başak", "Atalar", "Cevizli", "Maltepe", "Süreyya Plajı", "İdealtepe",
+    "Küçükyalı", "Bostancı", "Suadiye", "Erenköy", "Göztepe", "Feneryolu",
+    "Söğütlüçeşme", "Ayrılıkçeşme", "Üsküdar", "Sirkeci", "Yenikapı",
+    "Kazlıçeşme", "Zeytinburnu", "Yenimahalle", "Bakırköy", "Ataköy",
+    "Yeşilyurt", "Yeşilköy", "Florya Akvaryum", "Florya", "Küçükçekmece",
+    "Mustafa Kemal", "Halkalı"
+  ]
+}
