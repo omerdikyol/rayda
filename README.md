@@ -94,8 +94,8 @@ Read our [Contributing Guide](CONTRIBUTING.md) to get started.
 
 Check our [Roadmap](ROADMAP.md) for planned features and development timeline.
 
-**Current Phase**: Foundation & Data Collection  
-**Next**: Core MVP with station selection and timetables
+**Current Phase**: Completed Essential MVP (Phase 2) ✅  
+**Next**: Station timetables and mobile optimization (Phase 3)
 
 ## 📄 License
 
