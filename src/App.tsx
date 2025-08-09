@@ -1,33 +1,69 @@
+import { useState, useEffect } from 'react';
 import Map from './components/Map';
+import Sidebar from './components/Sidebar';
+import StatusBar from './components/StatusBar';
+import StationSelector from './components/StationSelector';
+import { LanguageProvider } from './contexts/LanguageContext';
 import './App.css';
 
 function App() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check for mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      
+      // Close sidebar on mobile by default
+      if (mobile) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleMenuClick = () => {
+    setIsSidebarOpen(true);
+  };
+
+  const handleSidebarClose = () => {
+    setIsSidebarOpen(false);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">
-                Rayda
-              </h1>
-              <span className="ml-3 px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                Beta
-              </span>
-            </div>
-            <p className="text-sm text-gray-600 hidden sm:block">
-              Real-time Marmaray Train Simulation
-            </p>
+    <LanguageProvider>
+      <div className="h-screen flex flex-col bg-gray-900">
+        {/* Status Bar */}
+        <StatusBar onMenuClick={handleMenuClick} />
+
+        {/* Main Content */}
+        <div className="flex-1 flex relative">
+          {/* Sidebar - Desktop always visible, Mobile overlay */}
+          {isMobile ? (
+            <Sidebar 
+              isOpen={isSidebarOpen} 
+              onClose={handleSidebarClose} 
+              isMobile={true}
+            />
+          ) : (
+            <Sidebar />
+          )}
+          
+          {/* Map Container */}
+          <div className="flex-1 relative">
+            <Map className="w-full h-full" />
+            
+            {/* Station Selector Overlay */}
+            <StationSelector />
           </div>
         </div>
-      </header>
-
-      {/* Map Container */}
-      <main className="h-[calc(100vh-73px)]">
-        <Map className="w-full h-full" />
-      </main>
-    </div>
+      </div>
+    </LanguageProvider>
   );
 }
 

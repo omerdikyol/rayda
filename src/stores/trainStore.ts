@@ -18,6 +18,9 @@ interface TrainStore {
 export const useTrainStore = create<TrainStore>((set, get) => {
   let updateInterval: number | null = null;
   const simulationEngine = new TrainSimulationEngine();
+  
+  // Make simulation engine globally accessible for debugging
+  (window as any).trainSimulationEngine = simulationEngine;
 
   return {
     // Initial state
@@ -35,15 +38,15 @@ export const useTrainStore = create<TrainStore>((set, get) => {
       // Update immediately
       get().updateTrainPositions();
 
-      // Set up interval for regular updates (every 5 seconds)
+      // Set up interval for very smooth movement updates (every 100ms for fluid animation)
       updateInterval = setInterval(() => {
         get().updateTrainPositions();
         
         // Cleanup old trains every 5 minutes
-        if (Date.now() % (5 * 60 * 1000) < 5000) {
+        if (Date.now() % (5 * 60 * 1000) < 100) {
           simulationEngine.cleanup();
         }
-      }, 5000);
+      }, 100); // Update 50 times more frequently for very smooth movement
 
       set({ isSimulationRunning: true });
     },
