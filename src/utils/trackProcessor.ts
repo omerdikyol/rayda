@@ -291,7 +291,6 @@ export class TrackProcessor {
     
     console.log(`✅ Station integration: ${mappedStations}/${stations.length} stations processed`);
   }
-  }
 
   /**
    * Optimize network connections by identifying and fixing gaps
@@ -301,7 +300,7 @@ export class TrackProcessor {
     
     // Find nodes that are very close but not connected
     const allNodes = this.graph.getAllNodes();
-    const connectionsMade = 0;
+    let connectionsMade = 0;
 
     for (let i = 0; i < allNodes.length; i++) {
       const node1 = allNodes[i];
@@ -326,6 +325,7 @@ export class TrackProcessor {
         if (!alreadyConnected) {
           // Create a connecting edge
           this.createConnectingEdge(node1, node2);
+          connectionsMade++;
         }
       }
     }

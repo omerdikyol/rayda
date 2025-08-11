@@ -30,7 +30,7 @@ Rayda is an open-source web application that provides a real-time simulation of 
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/rayda.git
+git clone https://github.com/omerdikyol/rayda.git
 cd rayda
 
 # Install dependencies
@@ -110,9 +110,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **🐛 Bug Reports**: [Create an issue](https://github.com/YOUR_USERNAME/rayda/issues/new/choose)
-- **💡 Feature Requests**: [Start a discussion](https://github.com/YOUR_USERNAME/rayda/discussions)
-- **❓ Questions**: Check our [FAQ](https://github.com/YOUR_USERNAME/rayda/discussions/categories/q-a)
+- **🐛 Bug Reports**: [Create an issue](https://github.com/omerdikyol/rayda/issues/new/choose)
+- **💡 Feature Requests**: [Start a discussion](https://github.com/omerdikyol/rayda/discussions)
+- **❓ Questions**: Check our [FAQ](https://github.com/omerdikyol/rayda/discussions/categories/q-a)
 - **🔒 Security**: See our [Security Policy](SECURITY.md)
 
 ---

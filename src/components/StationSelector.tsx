@@ -27,7 +27,7 @@ const StationSelector = () => {
 
   // Add swipe to close functionality for mobile
   useSwipeGesture(
-    panelRef,
+    panelRef as React.RefObject<HTMLElement>,
     {
       onSwipeRight: () => setIsOpen(false)
     },

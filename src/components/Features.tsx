@@ -120,7 +120,7 @@ const Features = () => {
             Plus Many More Features
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {additionalFeatures.map((feature, index) => (
+            {additionalFeatures.map((feature) => (
               <div
                 key={feature.label}
                 className="flex flex-col items-center p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-colors duration-300 group"

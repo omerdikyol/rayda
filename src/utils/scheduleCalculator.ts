@@ -93,7 +93,7 @@ function getRouteSchedule(route: Route, currentTime: Date): {
  */
 export function calculateScheduledDeparture(
   fromStationId: string,
-  toStationId: string,
+  _toStationId: string,
   routeId: string,
   direction: 'forward' | 'backward',
   journeyTime: number, // in seconds
