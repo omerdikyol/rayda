@@ -131,7 +131,79 @@ export const translations = {
     activeRoutesSection: 'Aktif Hatlar',
     mapSettingsSection: 'Harita Ayarları',
     onlySecond: 'saniye',
-    onlySeconds: 'saniye'
+    onlySeconds: 'saniye',
+
+    // Route Planner
+    routePlanner: 'Güzergah Planlayıcı',
+    from: 'Nereden',
+    to: 'Nereye',
+    selectDepartureStation: 'Kalkış istasyonu seçin',
+    selectDestinationStation: 'Varış istasyonu seçin',
+    clearSelection: 'Seçimi temizle',
+    calculatingBestRoute: 'En iyi güzergah hesaplanıyor...',
+    nextDeparture: 'Sonraki Kalkış',
+    routePath: 'Güzergah Yolu',
+    origin: 'Başlangıç',
+    destination: 'Varış noktası',
+    moreStops: 'durağı daha',
+    planYourJourney: 'Yolculuğunuzu planlayın',
+    selectStationsToGetStarted: 'Başlamak için kalkış ve varış istasyonlarınızı seçin.',
+    noRouteFound: 'Güzergah bulunamadı',
+    unableToFindDirectRoute: 'Bu istasyonlar arasında doğrudan güzergah bulunamadı.',
+    totalJourneyTime: 'Toplam yolculuk süresi',
+    stop: 'durak',
+    stops: 'durak',
+    eastbound: 'doğuya doğru',
+    westbound: 'batıya doğru',
+    following: 'takip ediliyor',
+    direction: 'yön',
+
+    // Service Status
+    serviceNotRunning: 'Servis çalışmıyor',
+    limitedServiceHours: 'Sınırlı servis saatleri',
+    thisRouteMayHaveLimitedHours: 'Bu güzergahın sınırlı çalışma saatleri olabilir. Güncel servis durumunu kontrol edin.',
+    scheduled: 'Planlanmış',
+    waitTime: 'Bekleme süresi',
+    departureTime: 'Kalkış saati',
+    estimatedArrival: 'Tahmini varış',
+
+    // Journey Summary
+    total: 'toplam',
+    trainDepartingNow: 'tren şimdi kalkıyor',
+    wait: 'bekle',
+    serviceStarts: 'servis başlıyor',
+    journey: 'yolculuk',
+    noServiceAvailable: 'Servis mevcut değil',
+
+    // Schedule Status Messages  
+    serviceIsCurrentlyRunning: 'Servis şu anda çalışıyor',
+    serviceStartsIn: 'Servis şu sürede başlıyor',
+    serviceInformationUnavailable: 'Servis bilgisi mevcut değil',
+    
+    // Time formatting
+    hour: 'saat',
+    hours: 'saat',
+    h: 's',
+    hourShort: 's',
+
+    // Station sections
+    europeanSide: 'Avrupa Yakası',
+    tunnelSection: 'Tünel Bölümü',
+    asianSide: 'Anadolu Yakası',
+    unknown: 'Bilinmeyen',
+
+    // Train popup
+    trainPopupDirection: 'Yön',
+    trainPopupProgress: 'İlerleme',
+
+    // Routes info
+    routeStatusInfo: 'Hat durumu, servis programları ve gerçek zamanlı verilere göre otomatik olarak güncellenir.',
+
+    // Mobile controls
+    zoomIn: 'Yakınlaştır',
+    zoomOut: 'Uzaklaştır',
+    recenter: 'Merkeze al',
+    fullscreen: 'Tam ekran'
   },
 
   en: {
@@ -266,7 +338,79 @@ export const translations = {
     activeRoutesSection: 'Active Routes',
     mapSettingsSection: 'Map Settings',
     onlySecond: 'second',
-    onlySeconds: 'seconds'
+    onlySeconds: 'seconds',
+
+    // Route Planner
+    routePlanner: 'Route Planner',
+    from: 'From',
+    to: 'To',
+    selectDepartureStation: 'Select departure station',
+    selectDestinationStation: 'Select destination station',
+    clearSelection: 'Clear selection',
+    calculatingBestRoute: 'Calculating best route...',
+    nextDeparture: 'Next Departure',
+    routePath: 'Route Path',
+    origin: 'Origin',
+    destination: 'Destination',
+    moreStops: 'more stops',
+    planYourJourney: 'Plan your journey',
+    selectStationsToGetStarted: 'Select your departure and destination stations to get started.',
+    noRouteFound: 'No route found',
+    unableToFindDirectRoute: 'Unable to find a direct route between these stations.',
+    totalJourneyTime: 'Total journey time',
+    stop: 'stop',
+    stops: 'stops',
+    eastbound: 'eastbound',
+    westbound: 'westbound',
+    following: 'Following',
+    direction: 'direction',
+
+    // Service Status
+    serviceNotRunning: 'Service not running',
+    limitedServiceHours: 'Limited service hours',
+    thisRouteMayHaveLimitedHours: 'This route may have limited operating hours. Check current service status.',
+    scheduled: 'Scheduled',
+    waitTime: 'Wait time',
+    departureTime: 'Departure time',
+    estimatedArrival: 'Estimated arrival',
+
+    // Journey Summary
+    total: 'total',
+    trainDepartingNow: 'train departing now',
+    wait: 'wait',
+    serviceStarts: 'service starts',
+    journey: 'journey',
+    noServiceAvailable: 'No service available',
+
+    // Schedule Status Messages
+    serviceIsCurrentlyRunning: 'Service is currently running',
+    serviceStartsIn: 'Service starts in',
+    serviceInformationUnavailable: 'Service information unavailable',
+
+    // Time formatting
+    hour: 'hour',
+    hours: 'hours',
+    h: 'h',
+    hourShort: 'h',
+
+    // Station sections
+    europeanSide: 'European Side',
+    tunnelSection: 'Tunnel Section',
+    asianSide: 'Asian Side',
+    unknown: 'Unknown',
+
+    // Train popup
+    trainPopupDirection: 'Direction',
+    trainPopupProgress: 'Progress',
+
+    // Routes info
+    routeStatusInfo: 'Route status is updated automatically based on service schedules and real-time data.',
+
+    // Mobile controls
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    recenter: 'Recenter',
+    fullscreen: 'Fullscreen'
   }
 };
 

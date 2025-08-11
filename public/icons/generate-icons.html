@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator for Rayda</title>
+</head>
+<body>
+    <h1>PWA Icon Generator</h1>
+    <p>This generates placeholder icons. Replace with actual branded icons.</p>
+    
+    <canvas id="canvas"></canvas>
+    
+    <script>
+        // Sizes needed for PWA
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        
+        sizes.forEach(size => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Background
+            ctx.fillStyle = '#0066CC';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Circle for train icon
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Train symbol (simplified)
+            ctx.fillStyle = '#0066CC';
+            ctx.font = `bold ${size/3}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🚇', size/2, size/2);
+            
+            // Create download link
+            canvas.toBlob(blob => {
+                const link = document.createElement('a');
+                link.download = `icon-${size}x${size}.png`;
+                link.href = URL.createObjectURL(blob);
+                link.textContent = `Download ${size}x${size}`;
+                link.style.display = 'block';
+                link.style.margin = '10px';
+                document.body.appendChild(link);
+            });
+        });
+    </script>
+</body>
+</html>
