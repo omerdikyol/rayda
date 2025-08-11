@@ -1,13 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Train, Clock, Activity, Menu, Github, Info, Globe } from 'lucide-react';
+import { Train, Clock, Activity, Github, Info, Globe } from 'lucide-react';
 import { useTrainStore } from '../stores/trainStore';
 import { useLanguage } from '../contexts/LanguageContext';
 
-interface StatusBarProps {
-  onMenuClick?: () => void;
-}
-
-const StatusBar = ({ onMenuClick }: StatusBarProps) => {
+const StatusBar = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const { trainPositions, isSimulationRunning } = useTrainStore();
   const { language, setLanguage, t } = useLanguage();
@@ -28,16 +24,8 @@ const StatusBar = ({ onMenuClick }: StatusBarProps) => {
   return (
     <div className="bg-gray-800 border-b border-gray-700 px-3 sm:px-4 py-2">
       <div className="flex items-center justify-between">
-        {/* Mobile: Menu + Brand | Desktop: Full Brand and Status */}
+        {/* Brand and Status */}
         <div className="flex items-center space-x-3 sm:space-x-6">
-          {/* Mobile Menu Button */}
-          <button
-            onClick={onMenuClick}
-            className="lg:hidden p-1.5 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors"
-            aria-label="Toggle menu"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
 
           {/* Brand */}
           <div className="flex items-center space-x-2">
