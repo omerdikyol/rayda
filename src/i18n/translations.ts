@@ -9,50 +9,6 @@ export const translations = {
     about: 'Hakkında',
     reportIssue: 'Sorun Bildir',
 
-    // Sidebar
-    controlPanel: 'Kontrol Paneli',
-    info: 'Bilgi',
-    routes: 'Hatlar',
-    stations: 'İstasyonlar',
-    settings: 'Ayarlar',
-
-    // System Overview
-    systemOverview: 'Sistem Genel Bakış',
-    totalStations: 'Toplam İstasyon',
-    activeTrains: 'Aktif Trenler',
-    avgFrequency: 'Ort. Sıklık',
-    networkLength: 'Ağ Uzunluğu',
-
-    // Quick Actions
-    quickActions: 'Hızlı İşlemler',
-    exportScheduleData: 'Program Verilerini Dışa Aktar',
-    viewAnalytics: 'Analizleri Görüntüle',
-    apiDocumentation: 'API Dokümantasyonu',
-
-
-    // Routes
-    activeRoutes: 'Aktif Hatlar',
-    fullLine: 'Tam Hat',
-    shortService: 'Kısa Sefer',
-    eveningService: 'Akşam Seferi',
-    routeFilters: 'Hat Filtreleri',
-    showExpressTrains: 'Ekspres trenleri göster',
-    showLocalTrains: 'Yerel trenleri göster',
-    showMaintenanceTracks: 'Bakım raylarını göster',
-
-    // Stations
-    searchStations: 'İstasyon ara...',
-    majorStations: 'Ana İstasyonlar',
-
-    // Settings
-    mapSettings: 'Harita Ayarları',
-    autoRefresh: 'Otomatik yenile',
-    showTrainLabels: 'Tren etiketlerini göster',
-    animateTransitions: 'Geçişleri animasyonlu yap',
-    refreshInterval: 'Yenileme Aralığı',
-    dataSource: 'Veri Kaynağı',
-    simulation: 'Simülasyon (Demo)',
-    liveApi: 'Canlı API (anahtar gerekli)',
 
     // Footer
     openSource: 'Açık Kaynak',
@@ -128,8 +84,6 @@ export const translations = {
     searchStationsPlaceholder: 'İstasyonlar ara...',
     favoritesSection: 'FAVORİLER',
     allStationsSection: 'TÜM İSTASYONLAR',
-    activeRoutesSection: 'Aktif Hatlar',
-    mapSettingsSection: 'Harita Ayarları',
     onlySecond: 'saniye',
     onlySeconds: 'saniye',
 
@@ -203,7 +157,11 @@ export const translations = {
     zoomIn: 'Yakınlaştır',
     zoomOut: 'Uzaklaştır',
     recenter: 'Merkeze al',
-    fullscreen: 'Tam ekran'
+    fullscreen: 'Tam ekran',
+
+    // Map legend train info
+    arrowsPointToNextStation: 'Oklar bir sonraki istasyonu gösterir',
+    multipleTrainsSpreadToAvoidOverlap: 'Birden fazla tren üst üste binmemek için dağılır'
   },
 
   en: {
@@ -216,50 +174,6 @@ export const translations = {
     about: 'About',
     reportIssue: 'Report Issue',
 
-    // Sidebar
-    controlPanel: 'Control Panel',
-    info: 'Info',
-    routes: 'Routes',
-    stations: 'Stations',
-    settings: 'Settings',
-
-    // System Overview
-    systemOverview: 'System Overview',
-    totalStations: 'Total Stations',
-    activeTrains: 'Active Trains',
-    avgFrequency: 'Avg. Frequency',
-    networkLength: 'Network Length',
-
-    // Quick Actions
-    quickActions: 'Quick Actions',
-    exportScheduleData: 'Export Schedule Data',
-    viewAnalytics: 'View Analytics',
-    apiDocumentation: 'API Documentation',
-
-
-    // Routes
-    activeRoutes: 'Active Routes',
-    fullLine: 'Full Line',
-    shortService: 'Short Service',
-    eveningService: 'Evening Service',
-    routeFilters: 'Route Filters',
-    showExpressTrains: 'Show express trains',
-    showLocalTrains: 'Show local trains',
-    showMaintenanceTracks: 'Show maintenance tracks',
-
-    // Stations
-    searchStations: 'Search stations...',
-    majorStations: 'Major Stations',
-
-    // Settings
-    mapSettings: 'Map Settings',
-    autoRefresh: 'Auto-refresh',
-    showTrainLabels: 'Show train labels',
-    animateTransitions: 'Animate transitions',
-    refreshInterval: 'Refresh Interval',
-    dataSource: 'Data Source',
-    simulation: 'Simulation (Demo)',
-    liveApi: 'Live API (requires key)',
 
     // Footer
     openSource: 'Open Source',
@@ -335,8 +249,6 @@ export const translations = {
     searchStationsPlaceholder: 'Search stations...',
     favoritesSection: 'FAVORITES',
     allStationsSection: 'ALL STATIONS',
-    activeRoutesSection: 'Active Routes',
-    mapSettingsSection: 'Map Settings',
     onlySecond: 'second',
     onlySeconds: 'seconds',
 
@@ -410,7 +322,11 @@ export const translations = {
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
     recenter: 'Recenter',
-    fullscreen: 'Fullscreen'
+    fullscreen: 'Fullscreen',
+
+    // Map legend train info
+    arrowsPointToNextStation: '▲ Arrows point to next station',
+    multipleTrainsSpreadToAvoidOverlap: 'Multiple trains spread to avoid overlap'
   }
 };
 

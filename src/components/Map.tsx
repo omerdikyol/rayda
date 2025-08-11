@@ -971,8 +971,8 @@ const Map = ({ className = '' }: MapProps) => {
           
           <div className="mt-1 sm:mt-2 pt-1 sm:pt-2 border-t border-gray-100 text-[9px] sm:text-[10px] text-gray-500">
             <div className="flex flex-col gap-1">
-              <span>▲ Arrows point to next station</span>
-              <span className="text-[8px] sm:text-[9px]">Multiple trains spread to avoid overlap</span>
+              <span>{t('arrowsPointToNextStation')}</span>
+              <span className="text-[8px] sm:text-[9px]">{t('multipleTrainsSpreadToAvoidOverlap')}</span>
             </div>
           </div>
         </div>
@@ -989,50 +989,52 @@ const Map = ({ className = '' }: MapProps) => {
         </div>
       </div>
 
-      {/* Railway Debug Panel */}
-      <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
-        <button
-          onClick={() => setDebugMode(!debugMode)}
-          className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-            debugMode 
-              ? 'bg-orange-500 text-white' 
-              : 'bg-white text-gray-700 border border-gray-300'
-          }`}
-        >
-          🛤️ {debugMode ? t('debugOn') : t('railwayDebug')}
-        </button>
-        
-        <button
-          onClick={() => {
-            setSelectionMode(!selectionMode);
-            if (selectionMode) {
-              // Turning off selection mode - clear everything
-              setSelectedAreaFeatures([]);
-              setSelectionBox(null);
-              // Remove selection layers if they exist
-              if (map.current?.getSource('selection-area')) {
-                if (map.current.getLayer('selection-area-line')) {
-                  map.current.removeLayer('selection-area-line');
+      {/* Railway Debug Panel - Development Only */}
+      {import.meta.env.DEV && (
+        <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
+          <button
+            onClick={() => setDebugMode(!debugMode)}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              debugMode 
+                ? 'bg-orange-500 text-white' 
+                : 'bg-white text-gray-700 border border-gray-300'
+            }`}
+          >
+            🛤️ {debugMode ? t('debugOn') : t('railwayDebug')}
+          </button>
+          
+          <button
+            onClick={() => {
+              setSelectionMode(!selectionMode);
+              if (selectionMode) {
+                // Turning off selection mode - clear everything
+                setSelectedAreaFeatures([]);
+                setSelectionBox(null);
+                // Remove selection layers if they exist
+                if (map.current?.getSource('selection-area')) {
+                  if (map.current.getLayer('selection-area-line')) {
+                    map.current.removeLayer('selection-area-line');
+                  }
+                  if (map.current.getLayer('selection-area-fill')) {
+                    map.current.removeLayer('selection-area-fill');
+                  }
+                  if (map.current.getLayer('selection-area-border')) {
+                    map.current.removeLayer('selection-area-border');
+                  }
+                  map.current.removeSource('selection-area');
                 }
-                if (map.current.getLayer('selection-area-fill')) {
-                  map.current.removeLayer('selection-area-fill');
-                }
-                if (map.current.getLayer('selection-area-border')) {
-                  map.current.removeLayer('selection-area-border');
-                }
-                map.current.removeSource('selection-area');
               }
-            }
-          }}
-          className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-            selectionMode
-              ? 'bg-blue-500 text-white'
-              : 'bg-white text-gray-700 border border-gray-300'
-          }`}
-        >
-          📐 {selectionMode ? t('selectionOn') : t('areaSelector')}
-        </button>
-      </div>
+            }}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              selectionMode
+                ? 'bg-blue-500 text-white'
+                : 'bg-white text-gray-700 border border-gray-300'
+            }`}
+          >
+            📐 {selectionMode ? t('selectionOn') : t('areaSelector')}
+          </button>
+        </div>
+      )}
 
       {/* Railway Info Panel */}
       {debugMode && clickedRailwayInfo && (
