@@ -24,6 +24,7 @@ export const translations = {
     // Station Selector
     stationTimetable: 'İstasyon Tarifesi',
     selectStation: 'İstasyon Seç',
+    stations: 'İstasyonlar',
     favorites: 'Favoriler',
     allStations: 'Tüm İstasyonlar',
     backToStations: '← İstasyonlara geri dön',
@@ -71,6 +72,9 @@ export const translations = {
     // Train legend
     marmarayTrains: 'Marmaray Trenleri',
     allRoutes: 'Tüm hatlar',
+    fullLine: 'Tam Hat',
+    shortService: 'Kısa Mesafe Servisi',
+    eveningService: 'Akşam Servisi',
 
     // Missing translations for hardcoded English text
     railwayDebug: 'Ray Hata Ayıklama',
@@ -79,7 +83,6 @@ export const translations = {
     selectionOn: 'Seçim: AÇIK',
     liveData: 'Canlı veri',
     kmFromHalkali: 'km Halkalı\'dan',
-    backToStations: '← İstasyonlara geri dön',
     train: 'Tren',
     searchStationsPlaceholder: 'İstasyonlar ara...',
     favoritesSection: 'FAVORİLER',
@@ -110,7 +113,6 @@ export const translations = {
     eastbound: 'doğuya doğru',
     westbound: 'batıya doğru',
     following: 'takip ediliyor',
-    direction: 'yön',
 
     // Service Status
     serviceNotRunning: 'Servis çalışmıyor',
@@ -189,6 +191,7 @@ export const translations = {
     // Station Selector
     stationTimetable: 'Station Timetable',
     selectStation: 'Select Station',
+    stations: 'Stations',
     favorites: 'Favorites',
     allStations: 'All Stations',
     backToStations: '← Back to stations',
@@ -236,6 +239,9 @@ export const translations = {
     // Train legend
     marmarayTrains: 'Marmaray Trains',
     allRoutes: 'All routes',
+    fullLine: 'Full Line',
+    shortService: 'Short Service',
+    eveningService: 'Evening Service',
 
     // Missing translations for hardcoded English text
     railwayDebug: 'Railway Debug',
@@ -244,7 +250,6 @@ export const translations = {
     selectionOn: 'Selection: ON',
     liveData: 'Live data',
     kmFromHalkali: 'km from Halkalı',
-    backToStations: '← Back to stations',
     train: 'Train',
     searchStationsPlaceholder: 'Search stations...',
     favoritesSection: 'FAVORITES',
@@ -275,7 +280,6 @@ export const translations = {
     eastbound: 'eastbound',
     westbound: 'westbound',
     following: 'Following',
-    direction: 'direction',
 
     // Service Status
     serviceNotRunning: 'Service not running',

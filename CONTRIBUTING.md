@@ -5,7 +5,7 @@ Thank you for your interest in contributing to Rayda! This document provides gui
 ## 🚀 Quick Start
 
 1. Fork the repository
-2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/rayda.git`
+2. Clone your fork: `git clone https://github.com/omerdikyol/rayda.git`
 3. Install dependencies: `npm install`
 4. Start development server: `npm run dev`
 5. Open http://localhost:5173 in your browser

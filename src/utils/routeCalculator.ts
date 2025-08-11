@@ -312,7 +312,7 @@ export class RouteCalculator {
 
   // Private helper methods
 
-  private async preCalculateRoutes(stations: Station[]): Promise<void> {
+  private async preCalculateRoutes(_stations: Station[]): Promise<void> {
     // This could be expanded to pre-calculate common station pairs
     console.log('📋 Pre-calculating common routes...');
   }

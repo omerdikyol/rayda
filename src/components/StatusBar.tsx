@@ -84,7 +84,7 @@ const StatusBar = () => {
             </button>
 
             <a
-              href="https://github.com"
+              href="https://github.com/omerdikyol/rayda"
               target="_blank"
               rel="noopener noreferrer"
               className="p-1.5 sm:px-3 sm:py-1 text-gray-300 hover:text-white hover:bg-gray-700 rounded transition-colors"

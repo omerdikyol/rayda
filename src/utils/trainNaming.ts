@@ -56,14 +56,10 @@ function getRoutePrefix(routeId: string): string {
 /**
  * Generate a short display name for the train
  */
-export function getTrainDisplayName(trainId: string, routeId: string, direction: 'forward' | 'backward'): string {
+export function getTrainDisplayName(trainId: string, routeId: string, _direction: 'forward' | 'backward'): string {
   const route = routes.find(r => r.id === routeId);
   if (!route) return 'Train';
 
-  // Get destination for display
-  const destinationId = direction === 'forward' ? route.termini[1] : route.termini[0];
-  const destinationStation = stations.find(s => s.id === destinationId);
-  const destinationName = destinationStation?.name || 'Unknown';
 
   // Extract train number from ID for simpler display
   const parts = trainId.split('-');

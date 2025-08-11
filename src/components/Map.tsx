@@ -6,7 +6,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Import our data
 import { stations } from '../data/stations';
-import { routeGeometry } from '../data/routeGeometry';
 import { useTrainStore } from '../stores/trainStore';
 import { useTimetableStore } from '../stores/timetableStore';
 import { useJourneyStore } from '../stores/journeyStore';
@@ -26,7 +25,7 @@ const Map = ({ className = '' }: MapProps) => {
   const [clickedRailwayInfo, setClickedRailwayInfo] = useState<any>(null);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedAreaFeatures, setSelectedAreaFeatures] = useState<any[]>([]);
-  const [selectionBox, setSelectionBox] = useState<mapboxgl.LngLatBounds | null>(null);
+  const [_selectionBox, setSelectionBox] = useState<mapboxgl.LngLatBounds | null>(null);
   const { t } = useLanguage();
   
   // Train simulation state
@@ -42,19 +41,9 @@ const Map = ({ className = '' }: MapProps) => {
   
   // Journey planner state
   const { fromStation, toStation, setFromStation, setToStation } = useJourneyStore();
+  // Suppress unused variable warnings for now
+  void fromStation; void toStation; void setFromStation; void setToStation;
 
-  const getRouteColor = useCallback((routeId: string): string => {
-    switch (routeId) {
-      case 'marmaray-full':
-        return '#1E40AF'; // Deep blue
-      case 'marmaray-short':
-        return '#059669'; // Emerald green  
-      case 'marmaray-evening':
-        return '#DC2626'; // Red
-      default:
-        return '#1E40AF';
-    }
-  }, []);
 
   const addMarmarayRoutes = useCallback(() => {
     if (!map.current) return;
@@ -104,19 +93,19 @@ const Map = ({ className = '' }: MapProps) => {
         
         // Keep electrified passenger lines with standard gauge
         if (props.electrified && props.gauge === '1435' && 
-            (props.usage === 'main' || !props.usage)) {
+            ((props as any).usage === 'main' || !(props as any).usage)) {
           return true;
         }
         
         // Skip service tracks, sidings, freight lines
-        if (props.service || props.usage === 'freight' || 
-            props.usage === 'industrial' || props.usage === 'branch') {
+        if ((props as any).service || (props as any).usage === 'freight' || 
+            (props as any).usage === 'industrial' || (props as any).usage === 'branch') {
           return false;
         }
         
         // Skip maintenance yard tracks and depot facilities
-        if (props.service === 'yard' || props.service === 'depot' || 
-            props.service === 'crossover' || props.service === 'spur') {
+        if ((props as any).service === 'yard' || (props as any).service === 'depot' || 
+            (props as any).service === 'crossover' || (props as any).service === 'spur') {
           return false;
         }
         
@@ -130,14 +119,14 @@ const Map = ({ className = '' }: MapProps) => {
     });
 
     const filteredGeoJSON = {
-      type: 'FeatureCollection',
+      type: 'FeatureCollection' as const,
       features: filteredFeatures
     };
 
     // Add the filtered Marmaray railway tracks
     map.current.addSource('marmaray-tracks', {
       type: 'geojson',
-      data: filteredGeoJSON
+      data: filteredGeoJSON as any
     });
 
     // Add main railway line (surface tracks)
@@ -480,38 +469,8 @@ const Map = ({ className = '' }: MapProps) => {
   }, []);
 
   // Calculate geographic bearing for rotation
-  // Helper function to check if a point is inside a bounding box
-  const isPointInBounds = useCallback((point: [number, number], bounds: mapboxgl.LngLatBounds): boolean => {
-    const [lng, lat] = point;
-    return lng >= bounds.getWest() && lng <= bounds.getEast() &&
-           lat >= bounds.getSouth() && lat <= bounds.getNorth();
-  }, []);
 
-  // Helper function to check if a LineString intersects with bounding box
-  const isLineStringInBounds = useCallback((coordinates: [number, number][], bounds: mapboxgl.LngLatBounds): boolean => {
-    return coordinates.some(coord => isPointInBounds(coord, bounds));
-  }, [isPointInBounds]);
 
-  // Function to get railway features in selected area
-  const getRailwayFeaturesInArea = useCallback((bounds: mapboxgl.LngLatBounds) => {
-    const geoData = marmarayTrackGeometry as any;
-    const featuresInArea: any[] = [];
-
-    for (const feature of geoData.features) {
-      if (feature.geometry.type === 'LineString') {
-        const coordinates = feature.geometry.coordinates as [number, number][];
-        if (isLineStringInBounds(coordinates, bounds)) {
-          featuresInArea.push({
-            ...feature.properties,
-            coordinates: coordinates,
-            geometryType: feature.geometry.type
-          });
-        }
-      }
-    }
-
-    return featuresInArea;
-  }, [isLineStringInBounds]);
 
   // Check if a point is inside a polygon
   const isPointInPolygon = useCallback((point: [number, number], polygon: [number, number][]): boolean => {
@@ -782,7 +741,7 @@ const Map = ({ className = '' }: MapProps) => {
       }
     };
 
-    const onMouseUp = (e: mapboxgl.MapMouseEvent) => {
+    const onMouseUp = (_e: mapboxgl.MapMouseEvent) => {
       if (!selectionMode || !isDrawing) return;
 
       isDrawing = false;

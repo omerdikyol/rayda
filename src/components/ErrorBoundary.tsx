@@ -1,4 +1,4 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 
 interface Props {
@@ -53,7 +53,7 @@ class ErrorBoundary extends Component<Props, State> {
               </p>
 
               {/* Error details (development only) */}
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {import.meta.env.DEV && this.state.error && (
                 <div className="bg-gray-100 rounded p-3 mb-6">
                   <p className="text-xs font-mono text-gray-700 break-all">
                     {this.state.error.toString()}
@@ -84,7 +84,7 @@ class ErrorBoundary extends Component<Props, State> {
             {/* Support text */}
             <p className="text-xs text-gray-500 text-center mt-4">
               If this problem persists, please{' '}
-              <a href="https://github.com/yourusername/rayda/issues" className="text-blue-600 hover:underline">
+              <a href="https://github.com/omerdikyol/rayda/issues" className="text-blue-600 hover:underline">
                 report an issue
               </a>
             </p>
