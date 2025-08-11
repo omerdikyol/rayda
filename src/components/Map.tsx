@@ -8,6 +8,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { stations } from '../data/stations';
 import { routeGeometry } from '../data/routeGeometry';
 import { useTrainStore } from '../stores/trainStore';
+import { useTimetableStore } from '../stores/timetableStore';
+import { useJourneyStore } from '../stores/journeyStore';
 import { excludedRailwayIds, excludedRailwayNames } from '../data/excludedRailwaySegments';
 // Import the real Marmaray railway geometry
 import marmarayTrackGeometry from '../data/marmaray-track-geometry.json';
@@ -34,6 +36,12 @@ const Map = ({ className = '' }: MapProps) => {
     stopSimulation, 
     isSimulationRunning 
   } = useTrainStore();
+
+  // Timetable state
+  const { selectStation } = useTimetableStore();
+  
+  // Journey planner state
+  const { fromStation, toStation, setFromStation, setToStation } = useJourneyStore();
 
   const getRouteColor = useCallback((routeId: string): string => {
     switch (routeId) {
@@ -281,23 +289,19 @@ const Map = ({ className = '' }: MapProps) => {
       if (!e.features || e.features.length === 0) return;
       
       const station = e.features[0];
-      const coordinates = (station.geometry as GeoJSON.Point).coordinates.slice();
       const properties = station.properties;
 
-      // Create popup
-      new mapboxgl.Popup()
-        .setLngLat([coordinates[0], coordinates[1]])
-        .setHTML(`
-          <div style="padding: 8px;">
-            <h3 style="margin: 0 0 4px 0; font-size: 14px; font-weight: bold;">
-              ${properties?.name}
-            </h3>
-            <p style="margin: 0; font-size: 12px; color: #666;">
-              ${properties?.distance} km from Halkalı
-            </p>
-          </div>
-        `)
-        .addTo(map.current!);
+      // Get the station ID from the properties
+      const stationId = properties?.id;
+      if (stationId) {
+        // Open the station timetable
+        selectStation(stationId);
+        
+        // Dispatch a custom event to notify StationSelector to open
+        window.dispatchEvent(new CustomEvent('openStationTimetable', {
+          detail: { stationId }
+        }));
+      }
     });
 
     // Change cursor on hover
@@ -312,7 +316,7 @@ const Map = ({ className = '' }: MapProps) => {
         map.current.getCanvas().style.cursor = '';
       }
     });
-  }, []);
+  }, [selectStation]);
 
   const addTrainLayer = useCallback(() => {
     if (!map.current) return;
@@ -381,9 +385,9 @@ const Map = ({ className = '' }: MapProps) => {
       const properties = train.properties;
 
       const routeNames: Record<string, string> = {
-        'marmaray-full': 'Full Line (Halkalı ↔ Gebze)',
-        'marmaray-short': 'Short Service (Ataköy ↔ Pendik)', 
-        'marmaray-evening': 'Evening Service (Pendik → Zeytinburnu)'
+        'marmaray-full': `${t('fullLine')} (${t('endpoints.halkalı-gebze')})`,
+        'marmaray-short': `${t('shortService')} (${t('endpoints.ataköy-pendik')})`, 
+        'marmaray-evening': `${t('eveningService')} (${t('endpoints.pendik-zeytinburnu')})`
       };
 
       // Get destination based on direction
@@ -403,19 +407,19 @@ const Map = ({ className = '' }: MapProps) => {
         .setHTML(`
           <div style="padding: 8px;">
             <h3 style="margin: 0 0 4px 0; font-size: 14px; font-weight: bold;">
-              Train ${properties?.trainId}
+              ${properties?.displayName || `${t('train')} ${properties?.trainId}`}
             </h3>
-            <p style="margin: 0 0 2px 0; font-size: 12px;">
-              ${routeNames[properties?.routeId] || properties?.routeId}
+            <p style="margin: 0 0 2px 0; font-size: 12px; color: #0066CC; font-weight: 500;">
+              ${properties?.fullName || `${routeNames[properties?.routeId] || properties?.routeId}`}
             </p>
             <p style="margin: 0 0 2px 0; font-size: 12px;">
-              Direction: ${getDestination(properties?.routeId, properties?.direction)} ${properties?.direction === 'forward' ? '▶' : '◀'}
+              ${t('trainPopupDirection')}: ${getDestination(properties?.routeId, properties?.direction)} ${properties?.direction === 'forward' ? '▶' : '◀'}
             </p>
             <p style="margin: 0; font-size: 12px; color: #666;">
               ${properties?.fromStation} → ${properties?.toStation}
             </p>
             <p style="margin: 2px 0 0 0; font-size: 11px; color: #999;">
-              Progress: ${properties?.progress}%
+              ${t('trainPopupProgress')}: ${properties?.progress}% • ${routeNames[properties?.routeId] || properties?.routeId}
             </p>
           </div>
         `)
@@ -626,6 +630,8 @@ const Map = ({ className = '' }: MapProps) => {
         type: 'Feature' as const,
         properties: {
           trainId: position.trainId,
+          displayName: position.displayName,
+          fullName: position.fullName,
           routeId: position.routeId,
           bearing: bearing,
           direction: position.direction,

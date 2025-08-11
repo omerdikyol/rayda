@@ -1,30 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Search, Clock, Star, X, Train, ChevronRight } from 'lucide-react';
 import { stations } from '../data/stations';
-import { useTrainStore } from '../stores/trainStore';
+import { useTimetableStore } from '../stores/timetableStore';
 import { useLanguage } from '../contexts/LanguageContext';
-
-interface Arrival {
-  trainId: string;
-  routeId: string;
-  direction: string;
-  arrivalTime: string;
-  minutesAway: number;
-}
+import { formatArrivalTime, formatMinutesAway } from '../utils/timetableCalculations';
+import { getFilteredStationsInOrder, getStationsGroupedBySection } from '../utils/stationOrdering';
+import { useSwipeGesture } from '../hooks/useSwipeGesture';
 
 const StationSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStation, setSelectedStation] = useState<typeof stations[0] | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [arrivals, setArrivals] = useState<Arrival[]>([]);
+  const panelRef = useRef<HTMLDivElement>(null);
   
-  const { trainPositions } = useTrainStore();
+  const { 
+    selectStation, 
+    getTimetableForStation, 
+    isCalculating 
+  } = useTimetableStore();
   const { t } = useLanguage();
 
-  // Filter stations based on search
-  const filteredStations = stations.filter(station =>
-    station.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // Get stations in route order with filtering
+  const filteredStations = getFilteredStationsInOrder(searchQuery);
+  const stationGroups = getStationsGroupedBySection(t);
+
+  // Add swipe to close functionality for mobile
+  useSwipeGesture(
+    panelRef,
+    {
+      onSwipeRight: () => setIsOpen(false)
+    },
+    {
+      threshold: 80,
+      disabled: !isOpen
+    }
   );
 
   // Toggle favorite station
@@ -36,59 +46,41 @@ const StationSelector = () => {
     );
   };
 
-  // Calculate arrivals for selected station
+  // Handle station selection
+  const handleStationSelect = useCallback((station: typeof stations[0]) => {
+    setSelectedStation(station);
+    selectStation(station.id);
+  }, [selectStation]);
+
+  // Get arrivals for selected station
+  const arrivals = selectedStation ? getTimetableForStation(selectedStation.id) : [];
+
+  // Real-time updates are now handled automatically by the timetable store
+  // when a station is selected
+
+  // Listen for map station clicks
   useEffect(() => {
-    if (!selectedStation) return;
-
-    const calculateArrivals = () => {
-      // Mock arrival data - in real app, calculate from train positions
-      const mockArrivals: Arrival[] = [
-        {
-          trainId: 'T001',
-          routeId: 'marmaray-full',
-          direction: 'Gebze',
-          arrivalTime: new Date(Date.now() + 2 * 60000).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
-          minutesAway: 2
-        },
-        {
-          trainId: 'T002',
-          routeId: 'marmaray-full',
-          direction: 'Halkalı',
-          arrivalTime: new Date(Date.now() + 5 * 60000).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
-          minutesAway: 5
-        },
-        {
-          trainId: 'T003',
-          routeId: 'marmaray-short',
-          direction: 'Pendik',
-          arrivalTime: new Date(Date.now() + 8 * 60000).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
-          minutesAway: 8
-        },
-        {
-          trainId: 'T004',
-          routeId: 'marmaray-full',
-          direction: 'Gebze',
-          arrivalTime: new Date(Date.now() + 12 * 60000).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
-          minutesAway: 12
-        },
-      ];
-
-      setArrivals(mockArrivals);
+    const handleStationClick = (event: CustomEvent) => {
+      const { stationId } = event.detail;
+      const station = stations.find(s => s.id === stationId);
+      if (station) {
+        handleStationSelect(station);
+        setIsOpen(true); // Open the timetable panel
+      }
     };
 
-    calculateArrivals();
-    const interval = setInterval(calculateArrivals, 30000); // Update every 30 seconds
+    window.addEventListener('openStationTimetable', handleStationClick as EventListener);
+    return () => {
+      window.removeEventListener('openStationTimetable', handleStationClick as EventListener);
+    };
+  }, []);
 
-    return () => clearInterval(interval);
-  }, [selectedStation, trainPositions]);
-
-  const getRouteColor = (routeId: string) => {
-    switch (routeId) {
-      case 'marmaray-full': return 'bg-blue-600';
-      case 'marmaray-short': return 'bg-emerald-600';
-      case 'marmaray-evening': return 'bg-red-600';
-      default: return 'bg-gray-600';
-    }
+  const getRouteColorClass = (color: string) => {
+    // Convert hex color to Tailwind class or return a default
+    if (color === '#0066CC') return 'bg-blue-600';
+    if (color === '#0099FF') return 'bg-blue-400';
+    if (color === '#FF6600') return 'bg-orange-600';
+    return 'bg-gray-600';
   };
 
   return (
@@ -96,14 +88,16 @@ const StationSelector = () => {
       {/* Floating Button - Tool Style */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 px-4 py-3 bg-gray-800 text-white border border-gray-700 rounded-lg shadow-lg hover:bg-gray-700 transition-colors flex items-center space-x-2"
+        className="fixed bottom-6 right-6 z-40 px-4 py-3 bg-gray-800 text-white border border-gray-700 rounded-lg shadow-lg hover:bg-gray-700 active:bg-gray-600 transition-colors flex items-center space-x-2 touch-manipulation"
       >
         <Search className="w-5 h-5" />
-        <span className="font-medium">{t('stationTimetable')}</span>
+        <span className="font-medium text-sm sm:text-base">{t('stationTimetable')}</span>
       </button>
 
       {/* Panel */}
-      <div className={`fixed right-0 top-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ${
+      <div 
+        ref={panelRef}
+        className={`fixed right-0 top-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         {/* Header */}
@@ -145,7 +139,7 @@ const StationSelector = () => {
                     .map(station => (
                       <button
                         key={station.id}
-                        onClick={() => setSelectedStation(station)}
+                        onClick={() => handleStationSelect(station)}
                         className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors"
                       >
                         <div className="flex items-center space-x-3">
@@ -161,34 +155,75 @@ const StationSelector = () => {
               {/* All Stations */}
               <div className="p-4">
                 <h3 className="text-sm font-semibold text-gray-600 mb-2">{t('allStationsSection')}</h3>
-                {filteredStations.map(station => (
-                  <div
-                    key={station.id}
-                    className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors group cursor-pointer"
-                    onClick={() => setSelectedStation(station)}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFavorite(station.id);
-                        }}
-                        className="p-1 hover:bg-gray-100 rounded"
-                      >
-                        <Star className={`w-4 h-4 ${
-                          favorites.includes(station.id)
-                            ? 'text-yellow-500 fill-current'
-                            : 'text-gray-400'
-                        }`} />
-                      </button>
-                      <div className="text-left">
-                        <div className="font-medium text-gray-900">{station.name}</div>
-                        <div className="text-xs text-gray-500">{station.distanceFromStart} {t('kmFromHalkali')}</div>
+                
+                {searchQuery ? (
+                  // Show filtered results when searching
+                  filteredStations.map(station => (
+                    <div
+                      key={station.id}
+                      className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors group cursor-pointer"
+                      onClick={() => handleStationSelect(station)}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleFavorite(station.id);
+                          }}
+                          className="p-1 hover:bg-gray-100 rounded"
+                        >
+                          <Star className={`w-4 h-4 ${
+                            favorites.includes(station.id)
+                              ? 'text-yellow-500 fill-current'
+                              : 'text-gray-400'
+                          }`} />
+                        </button>
+                        <div className="text-left">
+                          <div className="font-medium text-gray-900">{station.name}</div>
+                          <div className="text-xs text-gray-500">{station.distanceFromStart} {t('kmFromHalkali')}</div>
+                        </div>
                       </div>
+                      <ChevronRight className="w-5 h-5 text-gray-400 group-hover:translate-x-1 transition-transform" />
                     </div>
-                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  // Show stations grouped by section when not searching
+                  stationGroups.map(group => (
+                    <div key={group.section} className="mb-4 last:mb-0">
+                      <div className="text-xs font-semibold text-gray-500 mb-2 px-2">
+                        {group.section}
+                      </div>
+                      {group.stations.map(station => (
+                        <div
+                          key={station.id}
+                          className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors group cursor-pointer"
+                          onClick={() => handleStationSelect(station)}
+                        >
+                          <div className="flex items-center space-x-3">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFavorite(station.id);
+                              }}
+                              className="p-1 hover:bg-gray-100 rounded"
+                            >
+                              <Star className={`w-4 h-4 ${
+                                favorites.includes(station.id)
+                                  ? 'text-yellow-500 fill-current'
+                                  : 'text-gray-400'
+                              }`} />
+                            </button>
+                            <div className="text-left">
+                              <div className="font-medium text-gray-900">{station.name}</div>
+                              <div className="text-xs text-gray-500">{station.distanceFromStart} {t('kmFromHalkali')}</div>
+                            </div>
+                          </div>
+                          <ChevronRight className="w-5 h-5 text-gray-400 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      ))}
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           ) : (
@@ -206,36 +241,47 @@ const StationSelector = () => {
               </div>
 
               <div className="p-4 space-y-3">
-                {arrivals.map((arrival, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className={`w-3 h-3 rounded-full ${getRouteColor(arrival.routeId)}`}></div>
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <Train className="w-4 h-4 text-gray-600" />
-                          <span className="font-semibold text-gray-900">{arrival.direction}</span>
-                        </div>
-                        <div className="text-sm text-gray-600">{t('train')} {arrival.trainId}</div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold text-gray-900">{arrival.arrivalTime}</div>
-                      <div className="text-sm text-gray-600">
-                        {arrival.minutesAway === 0 
-                          ? t('now') 
-                          : `${arrival.minutesAway} ${t('min')}`}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                {arrivals.length === 0 && (
+                {isCalculating && arrivals.length === 0 ? (
                   <div className="text-center py-8 text-gray-500">
-                    {t('noUpcomingArrivals')}
+                    <div className="animate-spin w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-2"></div>
+                    Calculating arrivals...
                   </div>
+                ) : (
+                  <>
+                    {arrivals.map((arrival, index) => (
+                      <div
+                        key={`${arrival.trainId}-${index}`}
+                        className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div className={`w-3 h-3 rounded-full ${getRouteColorClass(arrival.color)}`}></div>
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <Train className="w-4 h-4 text-gray-600" />
+                              <span className="font-semibold text-gray-900">{arrival.finalDestination}</span>
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {arrival.routeName} • {arrival.displayName}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-lg font-bold text-gray-900">
+                            {formatArrivalTime(arrival.arrivalTime)}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {formatMinutesAway(arrival.minutesAway)}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {arrivals.length === 0 && !isCalculating && (
+                      <div className="text-center py-8 text-gray-500">
+                        {t('noUpcomingArrivals')}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -246,10 +292,22 @@ const StationSelector = () => {
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gray-50 border-t border-gray-200">
           <div className="flex items-center justify-between text-xs text-gray-600">
             <div className="flex items-center space-x-2">
-              <Clock className="w-4 h-4" />
-              <span>{t('updated')}: {new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span>
+              {isCalculating ? (
+                <>
+                  <div className="animate-spin w-3 h-3 border border-blue-600 border-t-transparent rounded-full"></div>
+                  <span>Updating...</span>
+                </>
+              ) : (
+                <>
+                  <Clock className="w-4 h-4" />
+                  <span>{t('updated')}: {new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span>
+                </>
+              )}
             </div>
-            <span>{t('liveData')}</span>
+            <div className="flex items-center space-x-1">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span>{t('liveData')}</span>
+            </div>
           </div>
         </div>
       </div>

@@ -3,9 +3,12 @@ import { routes } from '../data/routes';
 import { stations } from '../data/stations';
 import { interStationTimes } from '../data/interStationTimes';
 import { SimpleRouteCalculator } from './simpleRouteCalculator';
+import { generateTrainName, getTrainDisplayName } from './trainNaming';
 
 export interface TrainPosition {
   trainId: string;
+  displayName: string; // User-friendly train name
+  fullName: string; // Full descriptive name
   routeId: string;
   coordinates: [number, number]; // [longitude, latitude]
   progress: number; // 0-1 progress between current segment
@@ -19,6 +22,7 @@ export interface TrainPosition {
   bearing: number; // Track direction in degrees
   nextArrivalTime?: Date;
   delay: number; // in seconds
+  departureTime: Date; // When the train started its journey
 }
 
 export class TrainSimulationEngine {
@@ -234,13 +238,16 @@ export class TrainSimulationEngine {
 
     return {
       trainId: train.id,
+      displayName: getTrainDisplayName(train.id, train.routeId, train.direction),
+      fullName: generateTrainName(train.routeId, train.direction, train.departureTime),
       routeId: train.routeId,
       coordinates,
       progress: routeProgress,
       currentSegment,
       direction: train.direction,
       bearing: bearing,
-      delay: 0 // No delay simulation for now
+      delay: 0, // No delay simulation for now
+      departureTime: train.departureTime
     };
   }
 
@@ -312,6 +319,8 @@ export class TrainSimulationEngine {
         
         return {
           trainId: train.id,
+          displayName: getTrainDisplayName(train.id, train.routeId, train.direction),
+          fullName: generateTrainName(train.routeId, train.direction, train.departureTime),
           routeId: train.routeId,
           coordinates: [lng, lat],
           progress: elapsedTime / totalJourneyTime,
@@ -323,7 +332,8 @@ export class TrainSimulationEngine {
           },
           direction: train.direction,
           bearing: bearing,
-          delay: 0
+          delay: 0,
+          departureTime: train.departureTime
         };
       }
 

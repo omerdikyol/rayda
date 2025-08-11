@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import Map from './components/Map';
+import LazyMap from './components/LazyMap';
 import Sidebar from './components/Sidebar';
 import StatusBar from './components/StatusBar';
 import StationSelector from './components/StationSelector';
+import RoutePlanner from './components/RoutePlanner';
 import { LanguageProvider } from './contexts/LanguageContext';
 import './App.css';
 
@@ -56,10 +57,11 @@ function App() {
           
           {/* Map Container */}
           <div className="flex-1 relative">
-            <Map className="w-full h-full" />
+            <LazyMap />
             
-            {/* Station Selector Overlay */}
+            {/* Overlay Components */}
             <StationSelector />
+            <RoutePlanner />
           </div>
         </div>
       </div>

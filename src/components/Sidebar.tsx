@@ -34,10 +34,48 @@ const Sidebar = ({ isOpen = true, onClose, isMobile = false }: SidebarProps) => 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Calculate trains per route
+  const getTrainsOnRoute = (routeId: string) => {
+    return trainPositions.filter(train => train.routeId === routeId).length;
+  };
+
+  // Check if route should be active based on current time
+  const isRouteActive = (routeId: string) => {
+    const hour = new Date().getHours();
+    if (routeId === 'marmaray-evening') {
+      return hour >= 20 && hour < 24;
+    }
+    return hour >= 6 && hour < 23;
+  };
+
   const routeInfo = [
-    { id: 'marmaray-full', name: t('fullLine'), endpoints: t('endpoints.halkalı-gebze'), color: 'bg-blue-600', active: true },
-    { id: 'marmaray-short', name: t('shortService'), endpoints: t('endpoints.ataköy-pendik'), color: 'bg-emerald-600', active: true },
-    { id: 'marmaray-evening', name: t('eveningService'), endpoints: t('endpoints.pendik-zeytinburnu'), color: 'bg-red-600', active: false }
+    { 
+      id: 'marmaray-full', 
+      name: t('fullLine'), 
+      endpoints: t('endpoints.halkalı-gebze'), 
+      color: 'bg-blue-600', 
+      active: isRouteActive('marmaray-full'),
+      trainCount: getTrainsOnRoute('marmaray-full'),
+      frequency: 15
+    },
+    { 
+      id: 'marmaray-short', 
+      name: t('shortService'), 
+      endpoints: t('endpoints.ataköy-pendik'), 
+      color: 'bg-emerald-600', 
+      active: isRouteActive('marmaray-short'),
+      trainCount: getTrainsOnRoute('marmaray-short'),
+      frequency: 8
+    },
+    { 
+      id: 'marmaray-evening', 
+      name: t('eveningService'), 
+      endpoints: t('endpoints.pendik-zeytinburnu'), 
+      color: 'bg-red-600', 
+      active: isRouteActive('marmaray-evening'),
+      trainCount: getTrainsOnRoute('marmaray-evening'),
+      frequency: 8
+    }
   ];
 
   const systemStats = [
@@ -207,27 +245,55 @@ const Sidebar = ({ isOpen = true, onClose, isMobile = false }: SidebarProps) => 
           <div className="space-y-2">
             {routeInfo.map((route) => (
               <div key={route.id} className="bg-gray-900 rounded-lg p-3">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center space-x-2">
-                    <div className={`w-3 h-3 rounded-full ${route.color}`}></div>
-                    <span className="text-sm font-medium text-white">{route.name}</span>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <div className={`w-3 h-3 rounded-full ${route.color}`}></div>
+                      <span className="text-sm font-medium text-white">{route.name}</span>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-xs text-gray-400">{route.endpoints}</p>
+                      <div className="flex items-center justify-between text-[10px] text-gray-500">
+                        <span>{t('frequency')}: {route.frequency} {t('min')}</span>
+                        <span className="flex items-center space-x-1">
+                          <Train className="w-3 h-3" />
+                          <span>{route.trainCount} {t('trains')}</span>
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between mt-2">
+                        <div className="flex-1 bg-gray-800 rounded-full h-1 mr-2">
+                          <div 
+                            className={`h-1 rounded-full transition-all ${route.active ? route.color : 'bg-gray-600'}`}
+                            style={{ width: route.active ? `${Math.min(100, (route.trainCount / 10) * 100)}%` : '0%' }}
+                          ></div>
+                        </div>
+                        {route.active ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-900/50 text-green-400">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-400 mr-1 animate-pulse"></span>
+                            {t('operational')}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-700 text-gray-400">
+                            <span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-1"></span>
+                            {t('offline')}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      checked={route.active} 
-                      className="sr-only peer"
-                      readOnly
-                    />
-                    <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-xs text-gray-400">{route.endpoints}</p>
-                  <p className="text-[10px] text-gray-500">{t('frequency')}: {route.id === 'marmaray-full' ? '15 min' : route.id === 'marmaray-short' ? '8 min' : '8 min'}</p>
                 </div>
               </div>
             ))}
+          </div>
+          
+          {/* Info text */}
+          <div className="mt-4 p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+            <div className="flex items-start space-x-2">
+              <Info className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+              <p className="text-[11px] text-gray-500">
+                {t('routeStatusInfo')}
+              </p>
+            </div>
           </div>
         </div>
       );
