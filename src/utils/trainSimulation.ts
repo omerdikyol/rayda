@@ -91,12 +91,18 @@ export class TrainSimulationEngine {
       serviceStart.setHours(20, 50, 0, 0);
       serviceEnd = new Date(now);
       serviceEnd.setHours(23, 30, 0, 0);
-    } else {
-      // Regular services: 6:00 AM - 22:30 (last train departure)
+    } else if (route.id === 'marmaray-short') {
+      // Ataköy-Pendik service: 6:00 AM - 20:50 (stops when evening service starts)
       serviceStart = new Date(now);
       serviceStart.setHours(6, 0, 0, 0);
       serviceEnd = new Date(now);
-      serviceEnd.setHours(22, 30, 0, 0);
+      serviceEnd.setHours(20, 50, 0, 0);
+    } else {
+      // Full route service: 6:00 AM - 23:59 (runs all day)
+      serviceStart = new Date(now);
+      serviceStart.setHours(6, 0, 0, 0);
+      serviceEnd = new Date(now);
+      serviceEnd.setHours(23, 59, 0, 0);
     }
 
     // Skip if outside service hours
