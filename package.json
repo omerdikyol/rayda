@@ -1,5 +1,6 @@
 {
   "name": "rayda-app",
+  "homepage": "https://omerdikyol.github.io/rayda",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,12 +8,15 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.11",
     "@types/mapbox-gl": "^3.4.1",
     "date-fns": "^4.1.0",
+    "gh-pages": "^6.3.0",
     "lucide-react": "^0.539.0",
     "mapbox-gl": "^3.14.0",
     "react": "^19.1.0",
