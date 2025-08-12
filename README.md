@@ -2,6 +2,8 @@
 
 > Real-time simulation of Istanbul's Marmaray train line with interactive map visualization
 
+🔗 **Try it here**: [https://omerdikyol.github.io/rayda](https://omerdikyol.github.io/rayda)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb.svg)](https://reactjs.org/)
