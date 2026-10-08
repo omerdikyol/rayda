@@ -1,19 +1,25 @@
-# 🚊 Rayda - Marmaray Train Tracker
+# Rayda: Marmaray map and train simulation
 
-> Real-time simulation of Istanbul's Marmaray train line with interactive map visualization
+A timetable-based simulation of Istanbul’s Marmaray line, with animated train positions, station arrivals, and journey planning.
 
-🔗 **Try it here**: [https://omerdikyol.github.io/rayda](https://omerdikyol.github.io/rayda)
+**Open the demo**: [https://omerdikyol.github.io/rayda](https://omerdikyol.github.io/rayda)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb.svg)](https://reactjs.org/)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-## ✨ About
+## Data and scope
 
-Rayda is an open-source web application that provides a real-time simulation of train positions on Istanbul's Marmaray line. Since official real-time tracking isn't publicly available, we create an intelligent simulation using official schedules, station coordinates, and travel times.
+Train positions are calculated from stored schedules and travel times, not a live GPS feed. Estimated arrivals can differ from actual service; use the app to explore the timetable and network rather than as an official operational tracker.
 
-### 🎯 Features
+Start with [trainSimulation](src/utils/trainSimulation.ts), [timetable calculations](src/utils/timetableCalculations.ts), and [the journey planner](src/utils/journeyPlanner.ts). [src/data](src/data) holds route geometry and timetable inputs.
+
+## About
+
+Rayda is an open-source web application that provides a real-time simulation of train positions on Istanbul's Marmaray line. Since official real-time tracking isn't publicly available, we create an schedule-based simulation using official schedules, station coordinates, and travel times.
+
+### Features
 
 - **Interactive Map**: Full Marmaray route with all 43 stations on an Istanbul map
 - **Real-time Simulation**: Animated train icons showing estimated positions
@@ -22,7 +28,7 @@ Rayda is an open-source web application that provides a real-time simulation of 
 - **Mobile Optimized**: Responsive design for commuters on-the-go
 - **Open Source**: Community-driven with transparent development
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Node.js 18+ and npm
@@ -48,7 +54,7 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173) to view the app.
 
-## 🛠 Development
+## Development
 
 ### Available Scripts
 
@@ -65,23 +71,23 @@ Open [http://localhost:5173](http://localhost:5173) to view the app.
 - **Styling**: Tailwind CSS + Radix UI components
 - **Build**: Vite for fast development and optimized builds
 
-## 🗺 How It Works
+## How It Works
 
-Since real-time train location data isn't publicly available, Rayda creates an intelligent simulation:
+Since real-time train location data isn't publicly available, Rayda creates an schedule-based simulation:
 
 1. **Schedule Data**: Uses official Marmaray timetables and route patterns
 2. **Time Calculation**: Calculates train positions based on departure times and inter-station travel data
 3. **Position Mapping**: Converts timing data to geographic coordinates for map display
 4. **Real-time Updates**: Updates every second to show current estimated positions
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions from the community! This project especially needs:
 
-- **📍 Accurate Data**: Station coordinates and precise travel times
-- **🐛 Bug Reports**: Testing on different devices and browsers
-- **💡 Features**: Ideas for improving the user experience
-- **🌐 Localization**: Turkish language support and other translations
+- **Accurate Data**: Station coordinates and precise travel times
+- **Bug Reports**: Testing on different devices and browsers
+- **Features**: Ideas for improving the user experience
+- **Localization**: Turkish language support and other translations
 
 Read our [Contributing Guide](CONTRIBUTING.md) to get started.
 
@@ -92,31 +98,29 @@ Read our [Contributing Guide](CONTRIBUTING.md) to get started.
 - [ ] Mobile testing and UX improvements
 - [ ] Accessibility enhancements
 
-## 📋 Roadmap
+## Roadmap
 
 Check our [Roadmap](ROADMAP.md) for planned features and development timeline.
 
 **Current Phase**: Completed Station Timetables & Mobile UX (Phase 3) ✅  
 **Next**: Advanced features and user experience (Phase 4)
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Istanbul Metropolitan Municipality for public transport data
 - OpenStreetMap contributors for geographic data
 - Mapbox for mapping infrastructure
 - The open-source community for tools and libraries
 
-## 📞 Support
+## Support
 
-- **🐛 Bug Reports**: [Create an issue](https://github.com/omerdikyol/rayda/issues/new/choose)
-- **💡 Feature Requests**: [Start a discussion](https://github.com/omerdikyol/rayda/discussions)
-- **❓ Questions**: Check our [FAQ](https://github.com/omerdikyol/rayda/discussions/categories/q-a)
-- **🔒 Security**: See our [Security Policy](SECURITY.md)
+- **Bug Reports**: [Create an issue](https://github.com/omerdikyol/rayda/issues/new/choose)
+- **Feature Requests**: [Start a discussion](https://github.com/omerdikyol/rayda/discussions)
+- **Questions**: Check our [FAQ](https://github.com/omerdikyol/rayda/discussions/categories/q-a)
+- **Security**: See our [Security Policy](SECURITY.md)
 
 ---
-
-Made with ❤️ for Istanbul's commuters and transit enthusiasts worldwide.
