@@ -326,7 +326,7 @@ export class SimpleRouteCalculator {
     const deltaLat = coord2.lat - coord1.lat;
     
     const angle = Math.atan2(deltaLng, deltaLat);
-    let bearing = (angle * 180 / Math.PI + 360) % 360;
+    const bearing = (angle * 180 / Math.PI + 360) % 360;
     
     // Debug bearing occasionally - disabled to reduce console noise
     // if (Math.random() < 0.001) {

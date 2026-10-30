@@ -360,7 +360,7 @@ export class TrainSimulationEngine {
     const angle = Math.atan2(deltaLng, deltaLat);
     
     // Convert to degrees (0-360) and adjust for Mapbox rotation (0° = North)
-    let bearing = (angle * 180 / Math.PI + 360) % 360;
+    const bearing = (angle * 180 / Math.PI + 360) % 360;
     
     return bearing;
   }
