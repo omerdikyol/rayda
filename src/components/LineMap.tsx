@@ -440,6 +440,8 @@ export default function LineMap() {
 
   const visibleStations = orderedStations.filter((station) => !hiddenLines.has(station.lineId));
   const focused = journeyLegs.length > 0;
+  // Trains shrink when zoomed out so ~180 of them don't bury the lines, most on small screens.
+  const trainScale = k * Math.min(1, (compact ? 0.5 : 0.75) + 0.2 * (zoom - 1));
   const dim = (on: boolean) => (focused && !on ? 0.2 : 1);
   const marmarayPoints = linePoints.marmaray;
 
@@ -696,7 +698,7 @@ export default function LineMap() {
               }}
               className="cursor-pointer"
               opacity={dim(journeyLineIds.includes(train.lineId))}
-              transform={`translate(${x} ${y}) rotate(${angle}) scale(${k})`}
+              transform={`translate(${x} ${y}) rotate(${angle}) scale(${trainScale})`}
             >
               {isSelected && <circle r={13} fill="none" stroke="#F5F6F8" strokeWidth={1} opacity={0.6} />}
               <rect
