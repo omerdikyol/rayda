@@ -11,7 +11,7 @@ There is no real-time feed and no mapping SDK. All data ships with the bundle an
 ## Commands
 
 - `npm run dev` — Vite dev server at `/`
-- `npm run build` — `tsc -b` + production build at base `/rayda/`
+- `npm run build` — `tsc -b` + production build, served at the root of rayda.omerdikyol.com
 - `npm run typecheck` — TypeScript only
 - `npm run lint` — ESLint
 - `npm run preview` — preview the production build

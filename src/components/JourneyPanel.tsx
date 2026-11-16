@@ -109,6 +109,7 @@ export default function JourneyPanel({ compact = false }: { compact?: boolean })
   const setFromStation = useAppStore((state) => state.setFromStation);
   const setToStation = useAppStore((state) => state.setToStation);
   const swapStations = useAppStore((state) => state.swapStations);
+  const setPickTarget = useAppStore((state) => state.setPickTarget);
   const selectedOptionId = useAppStore((state) => state.journeyOptionId);
   const selectJourney = useAppStore((state) => state.selectJourney);
 
@@ -161,6 +162,7 @@ export default function JourneyPanel({ compact = false }: { compact?: boolean })
               value={fromStationId || null}
               onChange={setFromStation}
               onClear={() => setFromStation('')}
+              onPickOnMap={() => setPickTarget('from')}
               placeholder={t('journey.selectFrom')}
               excludeId={toStationId || undefined}
             />
@@ -169,6 +171,7 @@ export default function JourneyPanel({ compact = false }: { compact?: boolean })
               value={toStationId || null}
               onChange={setToStation}
               onClear={() => setToStation('')}
+              onPickOnMap={() => setPickTarget('to')}
               placeholder={t('journey.selectTo')}
               excludeId={fromStationId || undefined}
             />

@@ -1,4 +1,5 @@
-import { Github, Globe2, PanelBottom, PanelLeft, PanelRight } from 'lucide-react';
+import { useState } from 'react';
+import { Github, Globe2, Moon, PanelBottom, PanelLeft, PanelRight, Sun } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTransit } from '../contexts/TransitContext';
 import { useAppStore, type Panels } from '../stores/appStore';
@@ -37,6 +38,34 @@ function PanelToggles() {
   );
 }
 
+function ThemeToggle() {
+  const { t } = useLanguage();
+  const [theme, setTheme] = useState(() => document.documentElement.dataset.theme ?? 'dark');
+  const next = theme === 'light' ? 'dark' : 'light';
+  const toggle = () => {
+    document.documentElement.dataset.theme = next;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'light' ? '#f4f5f7' : '#0b0c0e');
+    try {
+      localStorage.setItem('rayda.theme', next);
+    } catch {
+      // Theme still switches for this visit.
+    }
+    setTheme(next);
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      title={t(`common.theme.${next}`)}
+      aria-label={t(`common.theme.${next}`)}
+      className="grid h-9 w-9 place-items-center rounded-lg text-mist-400 transition hover:bg-ink-800 hover:text-mist-50"
+    >
+      {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+    </button>
+  );
+}
+
 export default function Header() {
   const { language, toggleLanguage, t } = useLanguage();
   const { now } = useTransit();
@@ -70,6 +99,8 @@ export default function Header() {
             {language.toUpperCase()}
           </span>
         </button>
+
+        <ThemeToggle />
 
         <a
           href="https://github.com/omerdikyol/rayda"

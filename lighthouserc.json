@@ -4,7 +4,7 @@
       "startServerCommand": "npm run preview -- --port 4173",
       "startServerReadyPattern": "Local:",
       "startServerReadyTimeout": 30000,
-      "url": ["http://localhost:4173/rayda/"],
+      "url": ["http://localhost:4173/"],
       "numberOfRuns": 1
     },
     "assert": {

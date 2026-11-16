@@ -23,6 +23,8 @@ interface StationPickerProps {
   excludeId?: string;
   /** Shows a clear button while a station is picked. */
   onClear?: () => void;
+  /** Offers "pick on map"; the map's next station tap fills this picker. */
+  onPickOnMap?: () => void;
 }
 
 interface StationGroup {
@@ -43,6 +45,7 @@ export default function StationPicker({
   placeholder,
   excludeId,
   onClear,
+  onPickOnMap,
 }: StationPickerProps) {
   const { t } = useLanguage();
   const favorites = useAppStore((state) => state.favorites);
@@ -228,6 +231,19 @@ export default function StationPicker({
                 className="w-full rounded-lg border border-transparent bg-ink-800 py-2 pl-8 pr-3 text-[13px] text-mist-100 placeholder:text-mist-500 focus:border-ink-500 focus:outline-none"
               />
             </div>
+            {onPickOnMap && (
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  onPickOnMap();
+                }}
+                className="mt-2 flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[12px] font-medium text-marmaray transition-colors hover:bg-ink-800"
+              >
+                <MapPin className="h-3.5 w-3.5" />
+                {t('journey.pickOnMap')}
+              </button>
+            )}
             <div className="mt-2 flex flex-wrap gap-1" role="group" aria-label={t('map.filter')}>
               {[null, ...lines.map((line) => line.id)].map((lineId) => {
                 const line = lineId ? lines.find((entry) => entry.id === lineId) : null;
@@ -306,7 +322,7 @@ export default function StationPicker({
                             className={`relative rounded-full border-2 bg-ink-850 ${
                               stationLines(station.id).length > 1 || isEndpoint ? 'h-3.5 w-3.5' : 'h-2.5 w-2.5'
                             }`}
-                            style={{ borderColor: stationLines(station.id).length > 1 ? '#F5F6F8' : group.rail }}
+                            style={{ borderColor: stationLines(station.id).length > 1 ? 'var(--color-mist-50)' : group.rail }}
                           />
                         </span>
                       ) : (

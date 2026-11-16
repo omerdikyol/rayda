@@ -2,7 +2,7 @@
 
 A timetable-driven live map of Istanbul rail: Marmaray plus the metro, tram, funicular and cable-car lines. Rayda reconstructs every train from published timetables and inter-station run times, then turns that into a fast, installable dashboard: animated trains, station departure boards, and a journey planner with transfers.
 
-**Open the app → [omerdikyol.github.io/rayda](https://omerdikyol.github.io/rayda)**
+**Open the app → [rayda.omerdikyol.com](https://rayda.omerdikyol.com)**
 
 ![Rayda desktop](docs/rayda-desktop.png)
 
@@ -52,7 +52,7 @@ npm run preview    # preview the production build
 
 No access token or API key is required.
 
-Production builds use the `/rayda/` base path for GitHub Pages. Local development runs at `/`.
+The app is served from the root of [rayda.omerdikyol.com](https://rayda.omerdikyol.com) (GitHub Pages with a custom domain, `public/CNAME`).
 
 ### Tech stack
 
