@@ -1,338 +1,364 @@
 export const translations = {
   tr: {
-    // Status Bar
-    system: 'Sistem',
-    operational: 'çalışıyor',
-    offline: 'çevrimdışı',
-    live: 'simülasyon',
-    trains: 'tren',
-    about: 'Hakkında',
-    reportIssue: 'Sorun Bildir',
-
-
-    // Footer
-    openSource: 'Açık Kaynak',
-    contributeGithub: 'GitHub\'da Katkıda Bulun',
-
-    // Map Legend
-    mapLegend: 'Harita Lejantı',
-    station: 'İstasyon (detaylar için tıklayın)',
-    direction: 'Yön',
-    forwardDirection: 'İleri yön',
-    backwardDirection: 'Geri yön',
-
-    // Station Selector
-    stationTimetable: 'İstasyon Tarifesi',
-    selectStation: 'İstasyon Seç',
-    stations: 'İstasyonlar',
-    favorites: 'Favoriler',
-    allStations: 'Tüm İstasyonlar',
-    backToStations: '← İstasyonlara geri dön',
-    nextArrivals: 'Sonraki gelişler',
-    now: 'Şimdi',
-    min: 'dk',
-    noUpcomingArrivals: 'Yaklaşan geliş yok',
-    updated: 'Güncellendi',
-    simulationData: 'Simülasyon verisi',
-
-    // Time formats
-    second: 'saniye',
-    seconds: 'saniye',
-    minute: 'dakika',
-    minutes: 'dakika',
-
-    // Route endpoints
-    endpoints: {
-      'halkalı-gebze': 'Halkalı ↔ Gebze',
-      'ataköy-pendik': 'Ataköy ↔ Pendik',
-      'pendik-zeytinburnu': 'Pendik → Zeytinburnu'
+    brand: {
+      name: 'rayda',
+      tagline: 'İstanbul raylı sistem haritası',
     },
-
-    // Directions
-    directions: {
-      gebze: 'Gebze',
-      halkalı: 'Halkalı',
-      pendik: 'Pendik',
-      ataköy: 'Ataköy',
-      zeytinburnu: 'Zeytinburnu'
+    status: {
+      live: 'Canlı simülasyon',
+      liveShort: 'Canlı',
+      paused: 'Servis beklemede',
+      pausedShort: 'Beklemede',
+      trains: 'tren',
+      nextService: 'Sonraki sefer',
+      network: 'Ağ durumu',
     },
-
-    // Frequency
-    frequency: 'Sıklık',
-
-    // Railway track types
-    marmarayTracks: 'Marmaray Rayları',
-    surfaceRailway: 'Yüzey Demiryolu',
-    tunnelSections: 'Tünel Bölümleri',
-    bridgeSections: 'Köprü Bölümleri',
-    mainLine: 'Ana hat',
-    underBosphorus: 'Boğaziçi altında',
-    overWaterRoads: 'Su/yol üzerinde',
-
-    // Train legend
-    marmarayTrains: 'Marmaray Trenleri',
-    allRoutes: 'Tüm hatlar',
-    fullLine: 'Tam Hat',
-    shortService: 'Kısa Mesafe Servisi',
-    eveningService: 'Akşam Servisi',
-
-    // Missing translations for hardcoded English text
-    railwayDebug: 'Ray Hata Ayıklama',
-    debugOn: 'Hata Ayıklama: AÇIK',
-    areaSelector: 'Alan Seçici',
-    selectionOn: 'Seçim: AÇIK',
-    liveData: 'Canlı veri',
-    kmFromHalkali: 'km Halkalı\'dan',
-    train: 'Tren',
-    searchStationsPlaceholder: 'İstasyonlar ara...',
-    favoritesSection: 'FAVORİLER',
-    allStationsSection: 'TÜM İSTASYONLAR',
-    onlySecond: 'saniye',
-    onlySeconds: 'saniye',
-
-    // Route Planner
-    routePlanner: 'Güzergah Planlayıcı',
-    from: 'Nereden',
-    to: 'Nereye',
-    selectDepartureStation: 'Kalkış istasyonu seçin',
-    selectDestinationStation: 'Varış istasyonu seçin',
-    clearSelection: 'Seçimi temizle',
-    calculatingBestRoute: 'En iyi güzergah hesaplanıyor...',
-    nextDeparture: 'Sonraki Kalkış',
-    routePath: 'Güzergah Yolu',
-    origin: 'Başlangıç',
-    destination: 'Varış noktası',
-    moreStops: 'durağı daha',
-    planYourJourney: 'Yolculuğunuzu planlayın',
-    selectStationsToGetStarted: 'Başlamak için kalkış ve varış istasyonlarınızı seçin.',
-    noRouteFound: 'Güzergah bulunamadı',
-    unableToFindDirectRoute: 'Bu istasyonlar arasında doğrudan güzergah bulunamadı.',
-    totalJourneyTime: 'Toplam yolculuk süresi',
-    stop: 'durak',
-    stops: 'durak',
-    eastbound: 'doğuya doğru',
-    westbound: 'batıya doğru',
-    following: 'takip ediliyor',
-
-    // Service Status
-    serviceNotRunning: 'Servis çalışmıyor',
-    limitedServiceHours: 'Sınırlı servis saatleri',
-    thisRouteMayHaveLimitedHours: 'Bu güzergahın sınırlı çalışma saatleri olabilir. Güncel servis durumunu kontrol edin.',
-    scheduled: 'Planlanmış',
-    waitTime: 'Bekleme süresi',
-    departureTime: 'Kalkış saati',
-    estimatedArrival: 'Tahmini varış',
-
-    // Journey Summary
-    total: 'toplam',
-    trainDepartingNow: 'tren şimdi kalkıyor',
-    wait: 'bekle',
-    serviceStarts: 'servis başlıyor',
-    journey: 'yolculuk',
-    noServiceAvailable: 'Servis mevcut değil',
-
-    // Schedule Status Messages  
-    serviceIsCurrentlyRunning: 'Servis şu anda çalışıyor',
-    serviceStartsIn: 'Servis şu sürede başlıyor',
-    serviceInformationUnavailable: 'Servis bilgisi mevcut değil',
-    
-    // Time formatting
-    hour: 'saat',
-    hours: 'saat',
-    h: 's',
-    hourShort: 's',
-
-    // Station sections
-    europeanSide: 'Avrupa Yakası',
-    tunnelSection: 'Tünel Bölümü',
-    asianSide: 'Anadolu Yakası',
-    unknown: 'Bilinmeyen',
-
-    // Train popup
-    trainPopupDirection: 'Yön',
-    trainPopupProgress: 'İlerleme',
-
-    // Routes info
-    routeStatusInfo: 'Hat durumu, servis programları ve gerçek zamanlı verilere göre otomatik olarak güncellenir.',
-
-    // Mobile controls
-    zoomIn: 'Yakınlaştır',
-    zoomOut: 'Uzaklaştır',
-    recenter: 'Merkeze al',
-    fullscreen: 'Tam ekran',
-
-    // Map legend train info
-    arrowsPointToNextStation: 'Oklar bir sonraki istasyonu gösterir',
-    multipleTrainsSpreadToAvoidOverlap: 'Birden fazla tren üst üste binmemek için dağılır'
+    nav: {
+      departures: 'Kalkışlar',
+      journey: 'Yolculuk',
+      live: 'Canlı harita',
+    },
+    section: {
+      europe: 'Avrupa yakası',
+      tunnel: 'Boğaz tüneli',
+      asia: 'Anadolu yakası',
+    },
+    route: {
+      full: {
+        name: 'Halkalı ↔ Gebze',
+        short: 'Tam hat',
+      },
+      short: {
+        name: 'Ataköy ↔ Pendik',
+        short: 'Kısa servis',
+      },
+      evening: {
+        name: 'Pendik → Zeytinburnu',
+        short: 'Akşam servisi',
+      },
+    },
+    intro: {
+      departuresTitle: 'Hangi istasyondasın?',
+      departuresBody: 'Bir istasyon seç; sonraki trenleri hat ve yöne göre gösterelim. Haritada bir istasyona dokunarak da seçebilirsin.',
+      hubs: 'Aktarma merkezleri',
+      journeyTitle: 'Nereden nereye?',
+      journeyBody: 'Başlangıç ve varış istasyonunu seç. Aktarmalar ve yürüme dahil en hızlı seçenekleri bulup haritada gösterelim.',
+      examples: 'Örnek yolculuklar',
+    },
+    panels: {
+      departures: 'Kalkışlar panelini göster/gizle',
+      journey: 'Yolculuk panelini göster/gizle',
+      summary: 'Hat özetini göster/gizle',
+    },
+    mode: {
+      rail: 'Banliyö',
+      metro: 'Metro',
+      tram: 'Tramvay',
+      funicular: 'Füniküler',
+      cable: 'Teleferik',
+    },
+    departures: {
+      title: 'Kalkışlar',
+      subtitle: 'Sonraki trenler',
+      station: 'İstasyon',
+      search: 'İstasyon ara',
+      favorites: 'Favoriler',
+      all: 'Tümü',
+      towardsAsia: 'Anadolu yönü',
+      towardsEurope: 'Avrupa yönü',
+      now: 'Şimdi',
+      live: 'Canlı',
+      scheduled: 'Planlı',
+      noDepartures: 'Yakın saatlerde kalkış yok',
+      serviceEnded: 'Bugünkü servis sona erdi',
+      nextServiceAt: 'İlk tren',
+      stopsHere: 'Bu istasyondan',
+      kmFromHalkali: 'km · Halkalı',
+      next: 'Sonraki',
+      later: 'Sonrası',
+      then: 'Sonra',
+      direction: 'Yön',
+      platform: 'Yön',
+      noResults: 'İstasyon bulunamadı',
+      close: 'Kapat',
+      selectStation: 'İstasyon seç',
+      star: 'Favorilere ekle',
+    },
+    journey: {
+      title: 'Yolculuk',
+      subtitle: 'Raylı sistemle yol planla',
+      from: 'Nereden',
+      to: 'Nereye',
+      selectFrom: 'Kalkış istasyonu',
+      selectTo: 'Varış istasyonu',
+      swap: 'Yer değiştir',
+      results: 'Sonraki kalkışlar',
+      direct: 'Aktarmasız',
+      duration: 'Süre',
+      wait: 'Bekleme',
+      arrives: 'Varış',
+      departs: 'Kalkış',
+      stops: 'durak',
+      stop: 'durak',
+      noRoute: 'Bu istasyonlar arasında doğrudan sefer yok',
+      pickBoth: 'İki istasyon seçin, sonraki trenleri birlikte görelim',
+      noService: 'Bu saatte sefer yok',
+      nextService: 'Sonraki servis',
+      timeline: 'Güzergah',
+      yourTrip: 'Yolculuğunuz',
+      intermediate: 'ara durak',
+      transfer: 'aktarma',
+      walk: 'Yürü',
+      platform: 'peronu',
+      selectStation: 'İstasyon seç',
+      leaveNow: 'Şimdi çık',
+      firstTrain: 'İlk tren',
+      minutes: 'dakika',
+    },
+    map: {
+      title: 'Raylı sistem ağı',
+      showJourney: 'Yolculuğu göster',
+      zoomIn: 'Yakınlaştır',
+      zoomOut: 'Uzaklaştır',
+      reset: 'Sıfırla',
+      legend: 'Lejant',
+      fullLine: 'Tam hat',
+      shortService: 'Kısa servis',
+      eveningService: 'Akşam servisi',
+      liveTrains: 'Aktif tren',
+      selectedStation: 'Seçili istasyon',
+      towards: 'yönü',
+      stations: 'istasyon',
+      lines: 'hat',
+      filter: 'Hatlar',
+      all: 'Tümü',
+      none: 'Hiçbiri',
+      only: 'Sadece',
+      journeyLines: 'Yolculuğum',
+      nextStop: 'Sonraki durak',
+      eta: 'varış',
+      bosphorus: 'Boğaziçi',
+      europe: 'Avrupa',
+      asia: 'Anadolu',
+      noServiceNow: 'Şu anda çalışan tren yok',
+      serviceResumes: 'Servis yeniden başlıyor',
+      close: 'Kapat',
+      train: 'Tren',
+      departed: 'Kalkış',
+      destination: 'Varış',
+      live: 'Canlı',
+      paused: 'Duraklatıldı',
+      hint: 'İstasyona tıklayın · sürükleyin · kaydırın',
+    },
+    network: {
+      title: 'Hatlar',
+      subtitle: 'şu an çalışan trenler',
+      weekday: 'Hafta içi',
+      weekend: 'Hafta sonu',
+      saturday: 'Cumartesi',
+      sunday: 'Pazar',
+      every: 'Her',
+      minutes: 'dk',
+    },
+    footer: {
+      note: 'Tarifeye dayalı; saatler tahminidir.',
+      data: 'Veri: İBB Açık Veri (GTFS) · Marmaray tarifesi',
+      github: 'GitHub',
+      madeFor: 'İstanbul için',
+    },
+    common: {
+      min: 'dk',
+      hr: 'sa',
+      km: 'km',
+      now: 'Şimdi',
+      close: 'Kapat',
+      loading: 'Yükleniyor',
+      language: 'Dil',
+      collapse: 'Paneli küçült',
+      clear: 'Temizle',
+      expand: 'Paneli aç',
+    },
   },
-
   en: {
-    // Status Bar
-    system: 'System',
-    operational: 'operational',
-    offline: 'offline',
-    live: 'simulation',
-    trains: 'trains',
-    about: 'About',
-    reportIssue: 'Report Issue',
-
-
-    // Footer
-    openSource: 'Open Source',
-    contributeGithub: 'Contribute on GitHub',
-
-    // Map Legend
-    mapLegend: 'Map Legend',
-    station: 'Station (click for details)',
-    direction: 'Direction',
-    forwardDirection: 'Forward direction',
-    backwardDirection: 'Backward direction',
-
-    // Station Selector
-    stationTimetable: 'Station Timetable',
-    selectStation: 'Select Station',
-    stations: 'Stations',
-    favorites: 'Favorites',
-    allStations: 'All Stations',
-    backToStations: '← Back to stations',
-    nextArrivals: 'Next arrivals',
-    now: 'Now',
-    min: 'min',
-    noUpcomingArrivals: 'No upcoming arrivals',
-    updated: 'Updated',
-    simulationData: 'Simulation data',
-
-    // Time formats
-    second: 'second',
-    seconds: 'seconds',
-    minute: 'minute',
-    minutes: 'minutes',
-
-    // Route endpoints
-    endpoints: {
-      'halkalı-gebze': 'Halkalı ↔ Gebze',
-      'ataköy-pendik': 'Ataköy ↔ Pendik',
-      'pendik-zeytinburnu': 'Pendik → Zeytinburnu'
+    brand: {
+      name: 'rayda',
+      tagline: 'Istanbul rail map',
     },
-
-    // Directions
-    directions: {
-      gebze: 'Gebze',
-      halkalı: 'Halkalı',
-      pendik: 'Pendik',
-      ataköy: 'Ataköy',
-      zeytinburnu: 'Zeytinburnu'
+    status: {
+      live: 'Live simulation',
+      liveShort: 'Live',
+      paused: 'Service paused',
+      pausedShort: 'Paused',
+      trains: 'trains',
+      nextService: 'Next service',
+      network: 'Network status',
     },
-
-    // Frequency
-    frequency: 'Frequency',
-
-    // Railway track types
-    marmarayTracks: 'Marmaray Tracks',
-    surfaceRailway: 'Surface Railway',
-    tunnelSections: 'Tunnel Sections',
-    bridgeSections: 'Bridge Sections',
-    mainLine: 'Main line',
-    underBosphorus: 'Under Bosphorus',
-    overWaterRoads: 'Over water/roads',
-
-    // Train legend
-    marmarayTrains: 'Marmaray Trains',
-    allRoutes: 'All routes',
-    fullLine: 'Full Line',
-    shortService: 'Short Service',
-    eveningService: 'Evening Service',
-
-    // Missing translations for hardcoded English text
-    railwayDebug: 'Railway Debug',
-    debugOn: 'Debug: ON',
-    areaSelector: 'Area Selector',
-    selectionOn: 'Selection: ON',
-    liveData: 'Live data',
-    kmFromHalkali: 'km from Halkalı',
-    train: 'Train',
-    searchStationsPlaceholder: 'Search stations...',
-    favoritesSection: 'FAVORITES',
-    allStationsSection: 'ALL STATIONS',
-    onlySecond: 'second',
-    onlySeconds: 'seconds',
-
-    // Route Planner
-    routePlanner: 'Route Planner',
-    from: 'From',
-    to: 'To',
-    selectDepartureStation: 'Select departure station',
-    selectDestinationStation: 'Select destination station',
-    clearSelection: 'Clear selection',
-    calculatingBestRoute: 'Calculating best route...',
-    nextDeparture: 'Next Departure',
-    routePath: 'Route Path',
-    origin: 'Origin',
-    destination: 'Destination',
-    moreStops: 'more stops',
-    planYourJourney: 'Plan your journey',
-    selectStationsToGetStarted: 'Select your departure and destination stations to get started.',
-    noRouteFound: 'No route found',
-    unableToFindDirectRoute: 'Unable to find a direct route between these stations.',
-    totalJourneyTime: 'Total journey time',
-    stop: 'stop',
-    stops: 'stops',
-    eastbound: 'eastbound',
-    westbound: 'westbound',
-    following: 'Following',
-
-    // Service Status
-    serviceNotRunning: 'Service not running',
-    limitedServiceHours: 'Limited service hours',
-    thisRouteMayHaveLimitedHours: 'This route may have limited operating hours. Check current service status.',
-    scheduled: 'Scheduled',
-    waitTime: 'Wait time',
-    departureTime: 'Departure time',
-    estimatedArrival: 'Estimated arrival',
-
-    // Journey Summary
-    total: 'total',
-    trainDepartingNow: 'train departing now',
-    wait: 'wait',
-    serviceStarts: 'service starts',
-    journey: 'journey',
-    noServiceAvailable: 'No service available',
-
-    // Schedule Status Messages
-    serviceIsCurrentlyRunning: 'Service is currently running',
-    serviceStartsIn: 'Service starts in',
-    serviceInformationUnavailable: 'Service information unavailable',
-
-    // Time formatting
-    hour: 'hour',
-    hours: 'hours',
-    h: 'h',
-    hourShort: 'h',
-
-    // Station sections
-    europeanSide: 'European Side',
-    tunnelSection: 'Tunnel Section',
-    asianSide: 'Asian Side',
-    unknown: 'Unknown',
-
-    // Train popup
-    trainPopupDirection: 'Direction',
-    trainPopupProgress: 'Progress',
-
-    // Routes info
-    routeStatusInfo: 'Route status is updated automatically based on service schedules and real-time data.',
-
-    // Mobile controls
-    zoomIn: 'Zoom in',
-    zoomOut: 'Zoom out',
-    recenter: 'Recenter',
-    fullscreen: 'Fullscreen',
-
-    // Map legend train info
-    arrowsPointToNextStation: '▲ Arrows point to next station',
-    multipleTrainsSpreadToAvoidOverlap: 'Multiple trains spread to avoid overlap'
-  }
+    nav: {
+      departures: 'Departures',
+      journey: 'Journey',
+      live: 'Live map',
+    },
+    section: {
+      europe: 'European side',
+      tunnel: 'Bosphorus tunnel',
+      asia: 'Asian side',
+    },
+    route: {
+      full: {
+        name: 'Halkalı ↔ Gebze',
+        short: 'Full line',
+      },
+      short: {
+        name: 'Ataköy ↔ Pendik',
+        short: 'Short service',
+      },
+      evening: {
+        name: 'Pendik → Zeytinburnu',
+        short: 'Evening service',
+      },
+    },
+    intro: {
+      departuresTitle: 'Which station are you at?',
+      departuresBody: 'Pick a station to see the next trains by line and direction. You can also tap a station on the map.',
+      hubs: 'Interchanges',
+      journeyTitle: 'Where to?',
+      journeyBody: 'Pick where you start and where you are going. We find the fastest options, transfers and walks included, and draw them on the map.',
+      examples: 'Example trips',
+    },
+    panels: {
+      departures: 'Show/hide departures',
+      journey: 'Show/hide journey planner',
+      summary: 'Show/hide line summary',
+    },
+    mode: {
+      rail: 'Commuter rail',
+      metro: 'Metro',
+      tram: 'Tram',
+      funicular: 'Funicular',
+      cable: 'Cable car',
+    },
+    departures: {
+      title: 'Departures',
+      subtitle: 'Next trains',
+      station: 'Station',
+      search: 'Search stations',
+      favorites: 'Favorites',
+      all: 'All',
+      towardsAsia: 'Toward Asia',
+      towardsEurope: 'Toward Europe',
+      now: 'Now',
+      live: 'Live',
+      scheduled: 'Scheduled',
+      noDepartures: 'No departures in the next hours',
+      serviceEnded: 'Service has ended for today',
+      nextServiceAt: 'First train',
+      stopsHere: 'From this station',
+      kmFromHalkali: 'km · Halkalı',
+      next: 'Up next',
+      later: 'Later',
+      then: 'Then',
+      direction: 'Direction',
+      platform: 'Toward',
+      noResults: 'No stations found',
+      close: 'Close',
+      selectStation: 'Select station',
+      star: 'Add to favorites',
+    },
+    journey: {
+      title: 'Journey',
+      subtitle: 'Plan a trip by rail',
+      from: 'From',
+      to: 'To',
+      selectFrom: 'Departure station',
+      selectTo: 'Destination station',
+      swap: 'Swap',
+      results: 'Next departures',
+      direct: 'Direct',
+      duration: 'Duration',
+      wait: 'Wait',
+      arrives: 'Arrives',
+      departs: 'Departs',
+      stops: 'stops',
+      stop: 'stop',
+      noRoute: 'No direct service between these stations',
+      pickBoth: 'Pick two stations to compare the next trains',
+      noService: 'No service at this hour',
+      nextService: 'Next service',
+      timeline: 'Route',
+      yourTrip: 'Your trip',
+      intermediate: 'intermediate stops',
+      transfer: 'transfer',
+      walk: 'Walk',
+      platform: 'platform',
+      selectStation: 'Select station',
+      leaveNow: 'Leave now',
+      firstTrain: 'First train',
+      minutes: 'minutes',
+    },
+    map: {
+      title: 'Rail network',
+      showJourney: 'Show journey',
+      zoomIn: 'Zoom in',
+      zoomOut: 'Zoom out',
+      reset: 'Reset',
+      legend: 'Legend',
+      fullLine: 'Full line',
+      shortService: 'Short service',
+      eveningService: 'Evening service',
+      liveTrains: 'Active trains',
+      selectedStation: 'Selected station',
+      towards: 'toward',
+      stations: 'stations',
+      lines: 'lines',
+      filter: 'Lines',
+      all: 'All',
+      none: 'None',
+      only: 'Only',
+      journeyLines: 'My journey',
+      nextStop: 'Next stop',
+      eta: 'arrives',
+      bosphorus: 'Bosphorus',
+      europe: 'Europe',
+      asia: 'Asia',
+      noServiceNow: 'No trains running right now',
+      serviceResumes: 'Service resumes at',
+      close: 'Close',
+      train: 'Train',
+      departed: 'Departed',
+      destination: 'Destination',
+      live: 'Live',
+      paused: 'Paused',
+      hint: 'Tap a station · drag · scroll to zoom',
+    },
+    network: {
+      title: 'Lines',
+      subtitle: 'trains running now',
+      weekday: 'Weekday',
+      weekend: 'Weekend',
+      saturday: 'Saturday',
+      sunday: 'Sunday',
+      every: 'Every',
+      minutes: 'min',
+    },
+    footer: {
+      note: 'Timetable-based; times are estimates.',
+      data: 'Data: IMM Open Data (GTFS) · Marmaray timetable',
+      github: 'GitHub',
+      madeFor: 'Made for Istanbul',
+    },
+    common: {
+      min: 'min',
+      hr: 'hr',
+      km: 'km',
+      now: 'Now',
+      close: 'Close',
+      loading: 'Loading',
+      language: 'Language',
+      collapse: 'Collapse panel',
+      clear: 'Clear',
+      expand: 'Expand panel',
+    },
+  },
 };
 
 export type Language = 'tr' | 'en';
-export type TranslationKey = keyof typeof translations.tr;

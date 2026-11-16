@@ -1,143 +1,86 @@
-import { useState, useEffect } from 'react';
-import { Menu, X, Train, Moon, Sun, Globe, Github, Info, Map as MapIcon } from 'lucide-react';
+import { Github, Globe2, PanelBottom, PanelLeft, PanelRight } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { useTransit } from '../contexts/TransitContext';
+import { useAppStore, type Panels } from '../stores/appStore';
+import { formatTime } from '../utils/time';
+import { Brand } from './Brand';
 
-const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+const PANEL_TOGGLES: { panel: keyof Panels; icon: typeof PanelLeft; label: string }[] = [
+  { panel: 'departures', icon: PanelLeft, label: 'panels.departures' },
+  { panel: 'summary', icon: PanelBottom, label: 'panels.summary' },
+  { panel: 'journey', icon: PanelRight, label: 'panels.journey' },
+];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const navItems = [
-    { label: 'Live Map', href: '#map-section', icon: MapIcon },
-    { label: 'Features', href: '#features', icon: Info },
-    { label: 'How It Works', href: '#how-it-works', icon: Train },
-  ];
-
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: 'smooth' });
-    setIsMobileMenuOpen(false);
-  };
+function PanelToggles() {
+  const { t } = useLanguage();
+  const panels = useAppStore((state) => state.panels);
+  const togglePanel = useAppStore((state) => state.togglePanel);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
-    }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
-          {/* Logo */}
-          <div className="flex items-center space-x-3">
-            <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-emerald-600 rounded-xl flex items-center justify-center transform rotate-3 hover:rotate-6 transition-transform">
-                <Train className="w-6 h-6 text-white" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Rayda</h1>
-              <p className="text-xs text-gray-500 -mt-1">Istanbul Transit Tracker</p>
-            </div>
-          </div>
+    <div className="mr-1 hidden items-center gap-0.5 rounded-lg border border-ink-700/80 p-0.5 lg:flex">
+      {PANEL_TOGGLES.map(({ panel, icon: Icon, label }) => (
+        <button
+          key={panel}
+          type="button"
+          onClick={() => togglePanel(panel)}
+          aria-pressed={panels[panel]}
+          title={t(label)}
+          aria-label={t(label)}
+          className={`grid h-7 w-7 place-items-center rounded-md transition-colors ${
+            panels[panel] ? 'bg-ink-800 text-mist-100' : 'text-mist-600 hover:text-mist-300'
+          }`}
+        >
+          <Icon className="h-4 w-4" />
+        </button>
+      ))}
+    </div>
+  );
+}
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <button
-                key={item.label}
-                onClick={() => scrollToSection(item.href)}
-                className="group flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors"
-              >
-                <item.icon className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="font-medium">{item.label}</span>
-              </button>
-            ))}
-          </nav>
+export default function Header() {
+  const { language, toggleLanguage, t } = useLanguage();
+  const { now } = useTransit();
 
-          {/* Right Side Actions */}
-          <div className="flex items-center space-x-3">
-            {/* Language Selector (Placeholder) */}
-            <button className="hidden sm:flex items-center space-x-1 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
-              <Globe className="w-4 h-4" />
-              <span className="text-sm">EN</span>
-            </button>
+  return (
+    <header className="relative z-30 flex h-16 shrink-0 items-center justify-between gap-3 border-b border-ink-700/60 bg-ink-900/80 px-3 backdrop-blur-xl sm:px-4 lg:px-6">
+      <div className="flex items-center gap-5">
+        <Brand />
+      </div>
 
-            {/* Dark Mode Toggle (Placeholder) */}
-            <button 
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="hidden sm:block p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
-
-            {/* GitHub Link */}
-            <a
-              href="https://github.com/omerdikyol/rayda"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:block p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <Github className="w-5 h-5" />
-            </a>
-
-            {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+      <div className="flex items-center gap-1 sm:gap-2">
+        <PanelToggles />
+        <div className="mr-1 flex items-baseline gap-1.5 sm:mr-2">
+          <span className="font-mono text-[13px] font-medium tabular text-mist-100 sm:text-[15px]">
+            {formatTime(now, true)}
+          </span>
+          <span className="hidden text-[11px] font-semibold text-mist-500 sm:inline">
+            IST
+          </span>
         </div>
 
-        {/* Mobile Menu */}
-        <div className={`md:hidden transition-all duration-300 overflow-hidden ${
-          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}>
-          <nav className="py-4 space-y-2 border-t border-gray-200">
-            {navItems.map((item) => (
-              <button
-                key={item.label}
-                onClick={() => scrollToSection(item.href)}
-                className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors"
-              >
-                <item.icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </button>
-            ))}
-            
-            <div className="flex items-center justify-around pt-4 mt-4 border-t border-gray-200">
-              <button className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
-                <Globe className="w-4 h-4" />
-                <span className="text-sm">EN</span>
-              </button>
-              <button 
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
-              <a
-                href="https://github.com/omerdikyol/rayda"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <Github className="w-5 h-5" />
-              </a>
-            </div>
-          </nav>
-        </div>
+        <button
+          type="button"
+          onClick={toggleLanguage}
+          title={t('common.language')}
+          aria-label={`${t('common.language')}: ${language.toUpperCase()}`}
+          className="flex h-9 items-center gap-1.5 rounded-lg px-2 text-mist-300 transition hover:bg-ink-800 hover:text-mist-50"
+        >
+          <Globe2 className="h-4 w-4" />
+          <span className="font-mono text-[11px] font-semibold">
+            {language.toUpperCase()}
+          </span>
+        </button>
+
+        <a
+          href="https://github.com/omerdikyol/rayda"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="GitHub"
+          className="grid h-9 w-9 place-items-center rounded-lg text-mist-400 transition hover:bg-ink-800 hover:text-mist-50"
+        >
+          <Github className="h-4 w-4" />
+        </a>
       </div>
     </header>
   );
-};
-
-export default Header;
+}

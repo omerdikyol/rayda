@@ -1,138 +1,96 @@
 import type { Route } from '../types';
+import { metroRoutes } from './metro';
 
-// Marmaray route patterns based on official service data
-// Source: Istanbul Metropolitan Municipality and research data
-export const routes: Route[] = [
+/**
+ * Marmaray service patterns.
+ *
+ * Windows are the first and last departures from the origin terminus in
+ * Istanbul local time, from the official timetable. Times past midnight are
+ * written as 24:xx/25:xx so they stay on the service day that started them.
+ * `lateNight` covers the nights from Friday into Saturday and Saturday into
+ * Sunday. The simulator derives every run in between from the headway; the
+ * last departure is always included even when it is off the headway grid.
+ */
+const marmarayRoutes: Route[] = [
   {
     id: 'marmaray-full',
-    name: 'Marmaray Full Line',
-    termini: ['275', '302'], // Halkalı to Gebze
-    frequency: 15, // Every 15 minutes
+    nameKey: 'route.full.name',
+    shortNameKey: 'route.full.short',
+    lineId: 'marmaray',
+    termini: ['275', '302'],
     stations: [
-      // European side - Halkalı to tunnel
-      '275', // Halkalı
-      '274', // Mustafa Kemal
-      '273', // Küçükçekmece
-      '272', // Florya
-      '271', // Florya Akvaryum
-      '270', // Yeşilköy
-      '269', // Yeşilyurt
-      '268', // Ataköy
-      '267', // Bakırköy
-      '266', // Yenimahalle
-      '265', // Zeytinburnu
-      '237', // Kazlıçeşme
-      '234', // Yenikapı
-      
-      // Tunnel section
-      '65',  // Sirkeci
-      '68',  // Üsküdar
-      '67',  // Ayrılıkçeşme
-      
-      // Asian side - tunnel to Gebze
-      '297', // Söğütlüçeşme
-      '296', // Feneryolu
-      '295', // Göztepe
-      '294', // Erenköy
-      '293', // Suadiye
-      '292', // Bostancı
-      '291', // Küçükyalı
-      '290', // İdealtepe
-      '289', // Süreyya Plajı
-      '288', // Maltepe
-      '287', // Cevizli
-      '286', // Atalar
-      '285', // Başak
-      '284', // Kartal
-      '283', // Yunus
-      '282', // Pendik
-      '281', // Kaynarca
-      '280', // Tersane
-      '279', // Güzelyalı
-      '278', // Aydıntepe
-      '277', // İçmeler
-      '276', // Tuzla
-      '298', // Çayırova
-      '299', // Fatih
-      '300', // Osmangazi
-      '301', // Darıca
-      '302'  // Gebze
+      '275', '274', '273', '272', '271', '270', '269', '268', '267', '266',
+      '265', '237', '234', '65', '68', '67', '297', '296', '295', '294',
+      '293', '292', '291', '290', '289', '288', '287', '286', '285', '284',
+      '283', '282', '281', '280', '279', '278', '277', '276', '298', '299',
+      '300', '301', '302',
     ],
-    color: '#0066CC' // Marmaray blue
+    color: '#4C8DFF',
+    service: {
+      forward: {
+        kind: 'headway',
+        frequency: 15,
+        standard: { firstDeparture: '05:58', lastDeparture: '22:58' },
+        lateNight: { firstDeparture: '05:58', lastDeparture: '25:28' },
+      },
+      backward: {
+        kind: 'headway',
+        frequency: 15,
+        standard: { firstDeparture: '06:05', lastDeparture: '22:50' },
+        lateNight: { firstDeparture: '06:05', lastDeparture: '25:20' },
+      },
+    },
   },
   {
     id: 'marmaray-short',
-    name: 'Marmaray Ataköy-Pendik',
-    termini: ['268', '282'], // Ataköy to Pendik
-    frequency: 8, // Every 8 minutes
+    nameKey: 'route.short.name',
+    shortNameKey: 'route.short.short',
+    lineId: 'marmaray',
+    termini: ['268', '282'],
     stations: [
-      // European side - Ataköy to tunnel
-      '268', // Ataköy
-      '267', // Bakırköy
-      '266', // Yenimahalle
-      '265', // Zeytinburnu
-      '237', // Kazlıçeşme
-      '234', // Yenikapı
-      
-      // Tunnel section
-      '65',  // Sirkeci
-      '68',  // Üsküdar
-      '67',  // Ayrılıkçeşme
-      
-      // Asian side - tunnel to Pendik
-      '297', // Söğütlüçeşme
-      '296', // Feneryolu
-      '295', // Göztepe
-      '294', // Erenköy
-      '293', // Suadiye
-      '292', // Bostancı
-      '291', // Küçükyalı
-      '290', // İdealtepe
-      '289', // Süreyya Plajı
-      '288', // Maltepe
-      '287', // Cevizli
-      '286', // Atalar
-      '285', // Başak
-      '284', // Kartal
-      '283', // Yunus
-      '282'  // Pendik
+      '268', '267', '266', '265', '237', '234', '65', '68', '67', '297',
+      '296', '295', '294', '293', '292', '291', '290', '289', '288', '287',
+      '286', '285', '284', '283', '282',
     ],
-    color: '#0099FF' // Lighter blue for short service
+    color: '#4C8DFF',
+    service: {
+      forward: {
+        kind: 'headway',
+        frequency: 8,
+        standard: { firstDeparture: '06:09', lastDeparture: '21:54' },
+        lateNight: { firstDeparture: '06:09', lastDeparture: '21:54' },
+      },
+      backward: {
+        kind: 'headway',
+        frequency: 8,
+        standard: { firstDeparture: '06:09', lastDeparture: '20:39' },
+        lateNight: { firstDeparture: '06:09', lastDeparture: '20:39' },
+      },
+    },
   },
   {
     id: 'marmaray-evening',
-    name: 'Marmaray Evening Pendik-Zeytinburnu',
-    termini: ['282', '265'], // Pendik to Zeytinburnu
-    frequency: 8, // Every 8 minutes (similar to short service)
+    nameKey: 'route.evening.name',
+    shortNameKey: 'route.evening.short',
+    lineId: 'marmaray',
+    termini: ['282', '265'],
     stations: [
-      // Asian side - Pendik to tunnel
-      '282', // Pendik
-      '283', // Yunus
-      '284', // Kartal
-      '285', // Başak
-      '286', // Atalar
-      '287', // Cevizli
-      '288', // Maltepe
-      '289', // Süreyya Plajı
-      '290', // İdealtepe
-      '291', // Küçükyalı
-      '292', // Bostancı
-      '293', // Suadiye
-      '294', // Erenköy
-      '295', // Göztepe
-      '296', // Feneryolu
-      '297', // Söğütlüçeşme
-      
-      // Tunnel section
-      '67',  // Ayrılıkçeşme
-      '68',  // Üsküdar
-      '65',  // Sirkeci
-      
-      // European side - tunnel to Zeytinburnu
-      '234', // Yenikapı
-      '237', // Kazlıçeşme
-      '265'  // Zeytinburnu
+      '282', '283', '284', '285', '286', '287', '288', '289', '290', '291',
+      '292', '293', '294', '295', '296', '297', '67', '68', '65', '234',
+      '237', '265',
     ],
-    color: '#FF6600' // Orange for evening service
-  }
+    color: '#4C8DFF',
+    service: {
+      forward: {
+        kind: 'headway',
+        frequency: 8,
+        standard: { firstDeparture: '20:50', lastDeparture: '22:39' },
+        lateNight: { firstDeparture: '20:50', lastDeparture: '22:39' },
+      },
+    },
+  },
 ];
+
+export const routes: Route[] = [...marmarayRoutes, ...metroRoutes];
+
+export const routeById = new Map(routes.map((route) => [route.id, route]));

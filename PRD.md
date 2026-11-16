@@ -3,6 +3,11 @@ Version: 0.1
 Date: August 7, 2025
 Status: Inception
 
+> **Status note:** This document captures the original inception plan. The shipped
+> v1.0 product uses a timetable-driven stateless engine and a custom responsive SVG
+> map instead of a mapping SDK. See `README.md` and `CLAUDE.md` for the current
+> architecture and data model.
+
 1. Introduction
 1.1. Project Overview
 The Marmaray Train Tracker is an open-source web application designed to provide Istanbul residents and visitors with a real-time simulation of the Marmaray train line's operations. Since an official, public real-time data feed of train locations is not available, this application will leverage publicly accessible schedule data, station locations, and inter-station travel times to calculate and visualize the estimated positions of all active trains.
