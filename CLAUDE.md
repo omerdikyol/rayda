@@ -1,63 +1,74 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for coding agents working in this repository.
 
-## Project Overview
+## Project
 
-Rayda is a real-time simulation web application for the Marmaray train line in Istanbul. The app visualizes train positions on an interactive map based on schedule data and provides station-specific arrival times. See PRD.md for complete requirements.
+Rayda is a timetable-driven live simulation of Istanbul rail: Marmaray plus every Metro İstanbul metro, tram, funicular and cable-car line in the IMM GTFS feed. It reconstructs train positions from service patterns and inter-station run times, then presents them in a responsive dashboard with station departures and a journey planner.
 
-## Development Commands
+There is no real-time feed and no mapping SDK. All data ships with the bundle and all timing runs on Istanbul local time.
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production (includes TypeScript compilation)
-- `npm run lint` - Run ESLint on all files
-- `npm run preview` - Preview production build locally
+## Commands
+
+- `npm run dev` — Vite dev server at `/`
+- `npm run build` — `tsc -b` + production build at base `/rayda/`
+- `npm run typecheck` — TypeScript only
+- `npm run lint` — ESLint
+- `npm run preview` — preview the production build
+
+Do not add a Mapbox or other map token; the map is custom SVG.
 
 ## Architecture
 
-### Tech Stack
-- **Frontend**: React 19 with TypeScript 5.8
-- **Mapping**: Mapbox GL JS for interactive map and train animations
-- **State Management**: Zustand for simulation state
-- **Styling**: Tailwind CSS with Radix UI components (dropdown-menu, select, tooltip)
-- **Build Tool**: Vite
-- **Date Utilities**: date-fns for time calculations
+```
+data/routes + data/interStationTimes
+        │
+        ▼
+utils/schedule.ts ── route plans, departures, active trains, arrivals, journeys
+        │
+        ├── contexts/TransitContext (1 s clock → trains + network status)
+        ├── components/DeparturesPanel
+        ├── components/JourneyPanel
+        └── components/LineMap (responsive SVG projection, pan/zoom, animated trains)
+```
 
-### Core Data Flow
-The app simulates train movement using a time-based calculation system:
+### Core rules
 
-1. **Static Data**: Station coordinates, routes, and inter-station travel times (src/data/)
-2. **Simulation Engine**: Calculates real-time train positions based on current time and schedules
-3. **State Management**: Zustand stores manage train positions, selected stations, and timetables
-4. **Map Rendering**: Mapbox GL displays animated train icons moving along route geometry
-5. **Station Interface**: Users select stations to view upcoming arrival times
+- **Time:** use `src/utils/time.ts`. `istanbulMidnight`, `atIstanbulTime`, `dayKey`, `isWeekend`, and `formatTime` are the only timezone-safe primitives. Never use `Date#getHours` for schedule logic.
+- **Service:** each direction is either `headway` (Marmaray: first/last departure *from the origin terminus* plus a frequency; `lateNight` applies to Friday and Saturday service days) or `timetable` (metro: explicit departures in seconds after the service-day midnight, by `weekday`/`saturday`/`sunday`). Times past midnight stay on the day that started them.
+- **Interchanges:** `network.ts` holds a curated list of transfers plus the feed's shared stops (a stop on two lines gets one platform id per line, `<stopId>-<line>`). Pickers show one entry per group; boards and the planner expand a stop to every platform. Walking times are estimated from distance (`walkSeconds`).
+- **Journey planner:** Connection Scan over the next 8 hours, 60 s minimum change between trains, walking links between interchange platforms, results cached per minute; journeys with a transfer wait over an hour are dropped.
+- **Runs are stateless:** `getActiveTrains(now)` derives all active trains from the clock on every tick. Do not cache mutable train state.
+- **Progress:** `segmentProgress` is within the current segment; `routeProgress` is across the whole run. Keep them distinct.
+- **Departure boards:** exclude trains whose destination is the selected station (terminating trains are not departures). Terminal stations should only show outgoing services.
+- **All UI reads the same engine:** do not duplicate frequency arithmetic in components.
 
-### Key Types (src/types/index.ts)
-- `Station`: Station data with coordinates and distances
-- `Route`: Route patterns with different termini and frequencies (Halkalı↔Gebze, Ataköy↔Pendik)
-- `Train`: Individual train instances with positions and timing
-- `InterStationTime`: Travel times between consecutive stations
-- `Timetable`: Station-specific arrival predictions
+### Key files
 
-### Project Structure
-- `src/components/` - React components
-- `src/stores/` - Zustand state management
-- `src/hooks/` - Custom React hooks
-- `src/data/` - Static data files (stations, routes, travel times)
-- `src/utils/` - Utility functions for calculations
-- `src/types/` - TypeScript type definitions
+- `src/utils/schedule.ts` — schedule engine and all public transit queries.
+- `src/utils/geo.ts` — projection, smooth paths, distance and bearing.
+- `src/contexts/TransitContext.tsx` — one clock for the whole app.
+- `src/stores/appStore.ts` — selected station, journey endpoints, favorites (persisted).
+- `src/components/LineMap.tsx` — responsive SVG map, nearest-station hit testing, train detail card.
+- `src/i18n/translations.ts` — Turkish and English copy.
 
-### Simulation Logic
-The core simulation works by:
-1. Generating timetables for multiple route patterns on app load
-2. Using setInterval to update train positions every second
-3. Calculating train progress between stations using elapsed time and travel data
-4. Converting progress to geographic coordinates for map display
-5. Aggregating arrival times from all active trains for station timetables
+### Types
 
-### Data Requirements
-Station coordinates and inter-station travel times need to be populated with accurate data from official sources. Current data in src/data/stations.ts are placeholders.
+`src/types/index.ts` defines `Station`, `Route`, `RoutePlan`, `TrainPosition`, `Arrival`, and `JourneyOption`. Extend these rather than creating parallel shapes.
 
-### Environment Configuration
-Required environment variable for Mapbox:
-- `VITE_MAPBOX_ACCESS_TOKEN` - Your Mapbox access token (set in .env.local)
+## Data
+
+- `src/data/stations.ts` — 43 Marmaray stations (IMM GTFS ids, coordinates, km from Halkalı), plus the metro stations.
+- `src/data/routes.ts` — three Marmaray patterns and their service windows, plus the metro routes.
+- `src/data/interStationTimes.ts` — directed run times in seconds, Marmaray from the official timetable.
+- `src/data/metro.ts` — generated by `scripts/import-metro.py` from the IMM GTFS feed (2024): lines, stations, run times and timetables. Do not edit by hand; change `LINES` in the script and regenerate. The header lists the feed gaps that were patched.
+- `src/data/network.ts` — lines, interchanges, ordering, sections, search, and major-station lists.
+
+Benchmarks (official timetable): 107 min Halkalı → Gebze, 108 min Gebze → Halkalı, 63 min Ataköy ↔ Pendik, 56 min Pendik → Zeytinburnu. Run times are directed and not symmetric.
+
+## Style
+
+- Tailwind v4 with tokens in `src/index.css` (`ink`, `mist`, `marmaray`, `mint`, `amber`, `rose`).
+- Dark product UI; use existing panel, glass, and typography patterns.
+- No comments unless the logic is genuinely non-obvious.
+- Keep the Turkish default language and the TR/EN toggle.

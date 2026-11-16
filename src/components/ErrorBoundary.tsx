@@ -1,5 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
@@ -11,10 +11,7 @@ interface State {
 }
 
 class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false,
-    error: null
-  };
+  public state: State = { hasError: false, error: null };
 
   public static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
@@ -29,71 +26,44 @@ class ErrorBoundary extends Component<Props, State> {
     window.location.reload();
   };
 
-  private handleHome = () => {
-    this.setState({ hasError: false, error: null });
-    window.location.href = '/';
-  };
-
   public render() {
-    if (this.state.hasError) {
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-          <div className="max-w-md w-full">
-            <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8">
-              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
-                <AlertTriangle className="w-6 h-6 text-red-600" />
-              </div>
-              
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-2">
-                Oops! Something went wrong
-              </h1>
-              
-              <p className="text-sm sm:text-base text-gray-600 text-center mb-6">
-                We encountered an unexpected error. Don't worry, your data is safe.
-              </p>
+    if (!this.state.hasError) return this.props.children;
 
-              {/* Error details (development only) */}
-              {import.meta.env.DEV && this.state.error && (
-                <div className="bg-gray-100 rounded p-3 mb-6">
-                  <p className="text-xs font-mono text-gray-700 break-all">
-                    {this.state.error.toString()}
-                  </p>
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={this.handleReset}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors touch-manipulation"
-                >
-                  <RefreshCw className="w-4 h-4" />
-                  <span>Try Again</span>
-                </button>
-                
-                <button
-                  onClick={this.handleHome}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors touch-manipulation"
-                >
-                  <Home className="w-4 h-4" />
-                  <span>Go Home</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Support text */}
-            <p className="text-xs text-gray-500 text-center mt-4">
-              If this problem persists, please{' '}
-              <a href="https://github.com/omerdikyol/rayda/issues" className="text-blue-600 hover:underline">
-                report an issue
-              </a>
-            </p>
+    return (
+      <div className="app-bg flex min-h-full items-center justify-center px-4">
+        <div className="glass w-full max-w-md rounded-3xl p-7 shadow-panel">
+          <div className="grid h-11 w-11 place-items-center rounded-2xl bg-rose/10 text-rose ring-1 ring-rose/20">
+            <AlertTriangle className="h-5 w-5" />
           </div>
-        </div>
-      );
-    }
 
-    return this.props.children;
+          <h1 className="mt-5 text-xl font-semibold text-mist-50">
+            Something went wrong
+          </h1>
+          <p className="mt-2 text-sm leading-relaxed text-mist-400">
+            Rayda hit an unexpected error. The timetable data is safe — reload to start a fresh
+            session.
+          </p>
+          <p className="mt-1 text-sm text-mist-500">
+            Beklenmeyen bir hata oluştu. Yeniden yükleyerek devam edebilirsiniz.
+          </p>
+
+          {import.meta.env.DEV && this.state.error && (
+            <pre className="mt-4 overflow-x-auto rounded-xl bg-ink-900 p-3 text-[11px] leading-relaxed text-rose/80">
+              {this.state.error.toString()}
+            </pre>
+          )}
+
+          <button
+            type="button"
+            onClick={this.handleReset}
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-marmaray px-4 py-3 text-sm font-semibold text-white transition hover:bg-marmaray/90"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Reload Rayda
+          </button>
+        </div>
+      </div>
+    );
   }
 }
 

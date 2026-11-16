@@ -2,7 +2,23 @@
 
 ## 🎯 Project Vision
 
-Create an open-source, real-time simulation of the Marmaray train line that helps Istanbul residents and visitors visualize train locations and plan their journeys more effectively.
+Create an open-source, live timetable simulation of the Marmaray line that helps Istanbul residents and visitors visualize train locations and plan their journeys more effectively.
+
+## 🚀 v1.0 — Product release
+*Status: Shipped ✅*
+
+Rayda is now a complete, schedule-driven product:
+
+- [x] Stateless timetable engine — trains are derived from the clock, so they never disappear and service resumes correctly
+- [x] Istanbul-time-safe scheduling (works regardless of device timezone)
+- [x] Unified service windows and headways across map, boards, and planner
+- [x] Responsive SVG network map with pan/zoom, nearest-station hit testing, and train detail cards
+- [x] Station departure boards with live/scheduled status and direction filters
+- [x] Direct journey planner with next departures, waits, and alternatives
+- [x] Turkish/English product UI, remembered locally
+- [x] Installable PWA with offline app shell and PNG icons
+- [x] GitHub Pages deployment under `/rayda/` with correct manifest and service-worker paths
+- [x] CI on Node 20/22 with lint, typecheck, build, and a Lighthouse configuration
 
 ## 📅 Development Phases
 

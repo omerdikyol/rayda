@@ -1,59 +1,38 @@
 <!doctype html>
-<html lang="en">
+<html lang="tr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/train-icon.svg" />
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-    <meta name="description" content="Real-time Marmaray train simulation for Istanbul. Track live train positions, view arrival times, and explore the complete rail network." />
-    <meta name="keywords" content="Marmaray, Istanbul, train, simulation, real-time, transit, railway" />
-    <meta property="og:title" content="Rayda - Marmaray Train Tracker" />
-    <meta property="og:description" content="Track Marmaray trains in real-time across Istanbul" />
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#0066CC" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%icons/rayda.svg" />
+    <link rel="apple-touch-icon" href="%BASE_URL%icons/icon-192x192.png" />
+    <link rel="manifest" href="%BASE_URL%manifest.json" />
+
+    <meta name="theme-color" content="#05070B" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="Rayda — İstanbul Marmaray için canlı tarife simülasyonu. Tren konumları, istasyon kalkışları ve yolculuk planlama. A timetable-driven live simulation of the Marmaray line."
+    />
+    <meta name="keywords" content="Marmaray, İstanbul, tren, ulaşım, canlı harita, tarife, Istanbul transit" />
+    <meta property="og:title" content="Rayda — Marmaray Live" />
+    <meta property="og:description" content="Live Marmaray simulation: trains, departures and journeys across Istanbul." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Rayda" />
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <title>Rayda - Real-time Marmaray Train Tracker | Istanbul</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Rayda — Marmaray Live</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-      // Register service worker for PWA functionality
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then((registration) => {
-              console.log('ServiceWorker registered:', registration.scope);
-              
-              // Check for updates periodically
-              setInterval(() => {
-                registration.update();
-              }, 60000); // Check every minute
-              
-              // Handle updates
-              registration.addEventListener('updatefound', () => {
-                const newWorker = registration.installing;
-                newWorker.addEventListener('statechange', () => {
-                  if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
-                    // New service worker activated, prompt for reload
-                    if (confirm('New version available! Reload to update?')) {
-                      window.location.reload();
-                    }
-                  }
-                });
-              });
-            })
-            .catch((error) => {
-              console.error('ServiceWorker registration failed:', error);
-            });
-        });
-      }
-    </script>
   </body>
 </html>

@@ -1,93 +1,74 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import { translations } from '../i18n/translations';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { translations, type Language } from '../i18n/translations';
 
-type Language = 'tr' | 'en';
-type TranslationKey = string;
+const STORAGE_KEY = 'rayda.language';
 
-interface LanguageContextType {
+interface LanguageContextValue {
   language: Language;
-  setLanguage: (lang: Language) => void;
-  t: (key: TranslationKey | string, fallback?: string) => string;
+  setLanguage: (language: Language) => void;
+  toggleLanguage: () => void;
+  t: (key: string, fallback?: string) => string;
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
-interface LanguageProviderProps {
-  children: ReactNode;
+function readInitialLanguage(): Language {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === 'tr' || saved === 'en') return saved;
+  } catch {
+    // Storage can be unavailable in private contexts.
+  }
+  return 'tr';
 }
 
-export const LanguageProvider = ({ children }: LanguageProviderProps) => {
-  // Default to Turkish
-  const [language, setLanguage] = useState<Language>('tr');
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [language, setLanguageState] = useState<Language>(readInitialLanguage);
 
-  // Load saved language preference
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('rayda-language') as Language;
-    if (savedLanguage && (savedLanguage === 'tr' || savedLanguage === 'en')) {
-      setLanguage(savedLanguage);
+    document.documentElement.lang = language;
+    try {
+      localStorage.setItem(STORAGE_KEY, language);
+    } catch {
+      // Ignore persistence failures.
     }
-  }, []);
+  }, [language]);
 
-  // Save language preference
-  const handleSetLanguage = (lang: Language) => {
-    setLanguage(lang);
-    localStorage.setItem('rayda-language', lang);
-  };
+  const setLanguage = (next: Language) => setLanguageState(next);
+  const toggleLanguage = () =>
+    setLanguageState((current) => (current === 'tr' ? 'en' : 'tr'));
 
-  // Translation function with fallback
-  const t = (key: TranslationKey | string, fallback?: string): string => {
-    // Handle nested keys like 'endpoints.halkalı-gebze'
-    if (key.includes('.')) {
-      const keys = key.split('.');
-      let value: any = translations[language];
-      
-      for (const k of keys) {
-        if (value && typeof value === 'object' && k in value) {
-          value = value[k];
+  const t = (key: string, fallback?: string): string => {
+    const read = (dictionary: unknown): string | undefined => {
+      let value: unknown = dictionary;
+      for (const part of key.split('.')) {
+        if (value && typeof value === 'object' && part in value) {
+          value = (value as Record<string, unknown>)[part];
         } else {
-          // Try English as fallback
-          value = translations['en'];
-          for (const k of keys) {
-            if (value && typeof value === 'object' && k in value) {
-              value = value[k];
-            } else {
-              return fallback || key;
-            }
-          }
-          break;
+          return undefined;
         }
       }
-      
-      return typeof value === 'string' ? value : (fallback || key);
-    }
+      return typeof value === 'string' ? value : undefined;
+    };
 
-    // Simple key lookup
-    const translation = (translations[language] as any)[key];
-    if (translation) {
-      return translation;
-    }
-
-    // Fallback to English
-    const englishTranslation = (translations['en'] as any)[key];
-    if (englishTranslation) {
-      return englishTranslation;
-    }
-
-    // Final fallback
-    return fallback || key;
+    return (
+      read(translations[language]) ??
+      read(translations.en) ??
+      fallback ??
+      key
+    );
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, toggleLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );
-};
+}
 
-export const useLanguage = () => {
+// eslint-disable-next-line react-refresh/only-export-components
+export function useLanguage(): LanguageContextValue {
   const context = useContext(LanguageContext);
-  if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
+  if (!context) throw new Error('useLanguage must be used inside LanguageProvider');
   return context;
-};
+}

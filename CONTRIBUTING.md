@@ -36,19 +36,17 @@ Thank you for your interest in contributing to Rayda! This document provides gui
 ## 🛠 Development Setup
 
 ### Prerequisites
-- Node.js 18+ and npm
+- Node.js 20.19+ (or 22+) and npm
 - Git
-- A Mapbox access token (for map features)
 
-### Environment Setup
-1. Copy `.env.example` to `.env.local` (when available)
-2. Add your Mapbox token: `VITE_MAPBOX_ACCESS_TOKEN=your_token_here`
+No API keys or mapping tokens are required.
 
 ### Available Scripts
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
+- `npm run dev` - Start the development server
+- `npm run build` - Typecheck and build for production
+- `npm run typecheck` - Run TypeScript only
 - `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues automatically
+- `npm run preview` - Preview the production build
 
 ### Code Style
 - We use ESLint and Prettier for code formatting
@@ -60,13 +58,14 @@ Thank you for your interest in contributing to Rayda! This document provides gui
 
 ```
 src/
-├── components/     # React components
-├── hooks/         # Custom React hooks  
-├── stores/        # Zustand state management
-├── data/          # Static data (stations, routes)
-├── utils/         # Utility functions
-├── types/         # TypeScript type definitions
-└── styles/        # Global styles
+├── components/     # UI: map, departures, journey planner, shell
+├── contexts/       # Language and live transit providers
+├── hooks/          # Clock hook
+├── stores/         # Persisted app state (Zustand)
+├── data/           # Stations, routes, run times, network helpers
+├── utils/          # Schedule engine, geometry, time, formatting
+├── types/          # TypeScript type definitions
+└── i18n/           # Turkish and English product copy
 ```
 
 ## 🔄 Pull Request Process
