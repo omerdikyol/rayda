@@ -24,6 +24,11 @@ interface AppState extends PersistedState {
   journeyFocus: boolean;
   selectJourney: (optionId: string | null) => void;
   setJourneyFocus: (focus: boolean) => void;
+  /** Journey endpoint the next map tap fills, if any. */
+  pickTarget: 'from' | 'to' | null;
+  setPickTarget: (target: 'from' | 'to' | null) => void;
+  /** Map tap: fills the endpoint being picked, otherwise selects the station for departures. */
+  pickStation: (stationId: string) => void;
   setSelectedStation: (stationId: string) => void;
   setFromStation: (stationId: string) => void;
   setToStation: (stationId: string) => void;
@@ -91,6 +96,15 @@ export const useAppStore = create<AppState>((set, get) => {
     ...initial,
     journeyOptionId: null,
     journeyFocus: false,
+    pickTarget: null,
+    setPickTarget: (target) => set({ pickTarget: target }),
+    pickStation: (stationId) => {
+      const { pickTarget } = get();
+      if (pickTarget === 'from') get().setFromStation(stationId);
+      else if (pickTarget === 'to') get().setToStation(stationId);
+      else get().setSelectedStation(stationId);
+      set({ pickTarget: null });
+    },
 
     selectJourney: (optionId) => set({ journeyOptionId: optionId, journeyFocus: true }),
     setJourneyFocus: (focus) => set({ journeyFocus: focus }),

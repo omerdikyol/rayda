@@ -17,7 +17,7 @@ Rayda is now a complete, schedule-driven product:
 - [x] Direct journey planner with next departures, waits, and alternatives
 - [x] Turkish/English product UI, remembered locally
 - [x] Installable PWA with offline app shell and PNG icons
-- [x] GitHub Pages deployment under `/rayda/` with correct manifest and service-worker paths
+- [x] GitHub Pages deployment at rayda.omerdikyol.com with correct manifest and service-worker paths
 - [x] CI on Node 20/22 with lint, typecheck, build, and a Lighthouse configuration
 
 ## 📅 Development Phases

@@ -2,8 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(() => ({
   plugins: [react()],
-  // GitHub Pages serves the app from /rayda/. Local dev runs at the root.
-  base: mode === 'production' ? '/rayda/' : '/',
+  // Served from the root of rayda.omerdikyol.com (GitHub Pages custom domain).
+  base: '/',
 }));

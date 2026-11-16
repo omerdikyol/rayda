@@ -68,5 +68,6 @@ jobs:
         uses: treosh/lighthouse-ci-action@v10
         with:
           configPath: ./lighthouserc.json
-          uploadArtifacts: true
+          # upload-artifact v3 (used by this action) is retired by GitHub; the public report link remains.
+          uploadArtifacts: false
           temporaryPublicStorage: true

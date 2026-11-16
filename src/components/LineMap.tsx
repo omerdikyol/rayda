@@ -6,7 +6,7 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from 'react';
-import { ArrowRight, Minus, Plus, RotateCcw, Route as RouteIcon, X } from 'lucide-react';
+import { ArrowRight, MapPin, Minus, Plus, RotateCcw, Route as RouteIcon, X } from 'lucide-react';
 import LineFilter from './LineFilter';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTransit } from '../contexts/TransitContext';
@@ -151,7 +151,9 @@ export default function LineMap() {
   const now = useClock(250);
   const trains = useMemo(() => getActiveTrains(now), [now]);
   const selectedStationId = useAppStore((state) => state.selectedStationId);
-  const setSelectedStation = useAppStore((state) => state.setSelectedStation);
+  const pickStation = useAppStore((state) => state.pickStation);
+  const pickTarget = useAppStore((state) => state.pickTarget);
+  const setPickTarget = useAppStore((state) => state.setPickTarget);
   const fromStationId = useAppStore((state) => state.fromStationId);
   const toStationId = useAppStore((state) => state.toStationId);
   const hiddenLineIds = useAppStore((state) => state.hiddenLines);
@@ -226,7 +228,7 @@ export default function LineMap() {
     return journey.legs.flatMap((leg): JourneyPath[] => {
       const from = network.points[leg.fromStationId];
       const to = network.points[leg.toStationId];
-      if (leg.kind === 'walk') return [{ kind: 'walk', d: `M ${from.x} ${from.y} L ${to.x} ${to.y}`, color: '#E8EAEE', reverse: false, seconds: leg.seconds }];
+      if (leg.kind === 'walk') return [{ kind: 'walk', d: `M ${from.x} ${from.y} L ${to.x} ${to.y}`, color: 'var(--color-mist-100)', reverse: false, seconds: leg.seconds }];
       const a = stationPlace.get(leg.fromStationId);
       const b = stationPlace.get(leg.toStationId);
       if (!a || !b || a.lineId !== b.lineId) return [];
@@ -431,11 +433,11 @@ export default function LineMap() {
       }
 
       if (nearestId && nearestDistance <= 24 * (view.w / baseView.w)) {
-        setSelectedStation(representativeId(nearestId));
+        pickStation(representativeId(nearestId));
         setSelectedTrainId(null);
       }
     },
-    [baseView.w, hiddenLines, network, setSelectedStation, view]
+    [baseView.w, hiddenLines, network, pickStation, view]
   );
 
   const visibleStations = orderedStations.filter((station) => !hiddenLines.has(station.lineId));
@@ -452,7 +454,7 @@ export default function LineMap() {
       <svg
         ref={svgRef}
         viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
-        className={`relative h-full w-full touch-none select-none ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
+        className={`relative h-full w-full touch-none select-none ${pickTarget ? 'cursor-crosshair' : isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
         role="img"
         aria-label={t('map.title')}
         onPointerDown={handlePointerDown}
@@ -473,7 +475,7 @@ export default function LineMap() {
                 textAnchor="middle"
                 fontSize={12 * k}
                 fontWeight={500}
-                fill="#6F7684"
+                fill="var(--color-mist-500)"
                 pointerEvents="none"
               >
                 {t(label.key)}
@@ -501,7 +503,7 @@ export default function LineMap() {
           <path
             d={curvePath(marmarayPoints, 13, 15)}
             fill="none"
-            stroke="#E8EAEE"
+            stroke="var(--color-mist-100)"
             strokeWidth={1.5}
             strokeOpacity={0.6}
             strokeLinecap="round"
@@ -521,7 +523,7 @@ export default function LineMap() {
               y1={a.y}
               x2={b.x}
               y2={b.y}
-              stroke="#E8EAEE"
+              stroke="var(--color-mist-100)"
               strokeWidth={6}
               strokeOpacity={0.35 * dim(ids.some((id) => journeyStations.has(id)))}
               strokeLinecap="round"
@@ -555,7 +557,7 @@ export default function LineMap() {
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
-                  setSelectedStation(representativeId(station.id));
+                  pickStation(representativeId(station.id));
                 }
               }}
               className="cursor-pointer outline-none"
@@ -563,14 +565,14 @@ export default function LineMap() {
             >
               <circle cx={point.x} cy={point.y} r={12 * k} fill="transparent" />
               {isSelected && (
-                <circle cx={point.x} cy={point.y} r={11 * k} fill="none" stroke="#F5F6F8" strokeWidth={1.2 * k} strokeOpacity={0.6} />
+                <circle cx={point.x} cy={point.y} r={11 * k} fill="none" stroke="var(--color-mist-50)" strokeWidth={1.2 * k} strokeOpacity={0.6} />
               )}
               <circle
                 cx={point.x}
                 cy={point.y}
                 r={radius + (isHovered ? 1.5 * k : 0)}
-                fill={isSelected ? '#F5F6F8' : '#0B0C0E'}
-                stroke={isSelected ? '#F5F6F8' : (line?.color ?? '#8C93A0')}
+                fill={isSelected ? 'var(--color-mist-50)' : 'var(--color-ink-950)'}
+                stroke={isSelected ? 'var(--color-mist-50)' : (line?.color ?? 'var(--color-mist-400)')}
                 strokeWidth={1.8 * k}
               />
             </g>
@@ -585,7 +587,7 @@ export default function LineMap() {
                   key={index}
                   d={leg.d}
                   fill="none"
-                  stroke="#E8EAEE"
+                  stroke="var(--color-mist-100)"
                   strokeWidth={2.5}
                   strokeDasharray="0.5 6"
                   strokeLinecap="round"
@@ -598,7 +600,7 @@ export default function LineMap() {
                   <path
                     d={leg.d}
                     fill="none"
-                    stroke="#0B0C0E"
+                    stroke="var(--color-ink-950)"
                     strokeWidth={13 * k}
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -618,7 +620,7 @@ export default function LineMap() {
                     style={{ animationDelay: `${index * 0.3}s` }}
                   />
                   {!reducedMotion && (
-                    <circle r={3.2 * k} fill="#F5F6F8" opacity={0}>
+                    <circle r={3.2 * k} fill="var(--color-mist-50)" opacity={0}>
                       <animate attributeName="opacity" to="0.95" dur="0.3s" begin={`${0.9 + index * 0.3}s`} fill="freeze" />
                       <animateMotion
                         path={leg.d}
@@ -642,19 +644,19 @@ export default function LineMap() {
               return (
                 <g key={id} transform={`translate(${point.x} ${point.y}) scale(${k})`}>
                   {isOrigin && !reducedMotion && (
-                    <circle r={8} fill="none" stroke="#F5F6F8" strokeWidth={1.5}>
+                    <circle r={8} fill="none" stroke="var(--color-mist-50)" strokeWidth={1.5}>
                       <animate attributeName="r" values="8;22" dur="2s" repeatCount="indefinite" />
                       <animate attributeName="opacity" values="0.7;0" dur="2s" repeatCount="indefinite" />
                     </circle>
                   )}
                   <circle
                     r={isOrigin || isEnd ? 7.5 : 5.5}
-                    fill={isEnd ? '#F5F6F8' : '#0B0C0E'}
-                    stroke="#F5F6F8"
+                    fill={isEnd ? 'var(--color-mist-50)' : 'var(--color-ink-950)'}
+                    stroke="var(--color-mist-50)"
                     strokeWidth={2.5}
                     className="journey-pop"
                   />
-                  {isOrigin && <circle r={2.5} fill="#F5F6F8" />}
+                  {isOrigin && <circle r={2.5} fill="var(--color-mist-50)" />}
                 </g>
               );
             })}
@@ -700,7 +702,7 @@ export default function LineMap() {
               opacity={dim(journeyLineIds.includes(train.lineId))}
               transform={`translate(${x} ${y}) rotate(${angle}) scale(${trainScale})`}
             >
-              {isSelected && <circle r={13} fill="none" stroke="#F5F6F8" strokeWidth={1} opacity={0.6} />}
+              {isSelected && <circle r={13} fill="none" stroke="var(--color-mist-50)" strokeWidth={1} opacity={0.6} />}
               <rect
                 x={-7}
                 y={-4}
@@ -708,10 +710,10 @@ export default function LineMap() {
                 height={8}
                 rx={4}
                 fill={train.routeColor}
-                stroke={isSelected ? '#F5F6F8' : '#0B0C0E'}
+                stroke={isSelected ? 'var(--color-mist-50)' : 'var(--color-ink-950)'}
                 strokeWidth={isSelected ? 2 : 1.5}
               />
-              <path d="M -1.5 -2 L 3 0 L -1.5 2 Z" fill="#0B0C0E" opacity={0.85} />
+              <path d="M -1.5 -2 L 3 0 L -1.5 2 Z" fill="var(--color-ink-950)" opacity={0.85} />
             </g>
           );
         })}
@@ -734,8 +736,8 @@ export default function LineMap() {
               textAnchor={label.anchor}
               fontSize={11 * k}
               fontWeight={strong ? 600 : major ? 500 : 400}
-              fill={strong ? '#F5F6F8' : major ? '#D0D4DB' : '#8C93A0'}
-              stroke="#0B0C0E"
+              fill={strong ? 'var(--color-mist-50)' : major ? 'var(--color-mist-200)' : 'var(--color-mist-400)'}
+              stroke="var(--color-ink-950)"
               strokeWidth={3.5 * k}
               paintOrder="stroke"
               pointerEvents="none"
@@ -754,8 +756,8 @@ export default function LineMap() {
             const boxY = point.y - view.y > 50 * k ? -36 : 14;
             return (
               <g pointerEvents="none" transform={`translate(${point.x} ${point.y}) scale(${k})`}>
-                <rect x={-width / 2} y={boxY} width={width} height={24} rx={8} fill="#14171A" stroke="#343942" />
-                <text x={0} y={boxY + 16} textAnchor="middle" fontSize={11} fontWeight={500} fill="#E8EAEE">
+                <rect x={-width / 2} y={boxY} width={width} height={24} rx={8} fill="var(--color-ink-850)" stroke="var(--color-ink-600)" />
+                <text x={0} y={boxY + 16} textAnchor="middle" fontSize={11} fontWeight={500} fill="var(--color-mist-100)">
                   {text}
                 </text>
               </g>
@@ -888,6 +890,20 @@ export default function LineMap() {
       )}
 
       <LineFilter journeyLineIds={journeyLineIds} />
+
+      {pickTarget && (
+        <div className="absolute bottom-16 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-xl border border-marmaray/40 bg-ink-850 py-1.5 pl-3 pr-1.5 text-[12px] font-medium text-mist-100 shadow-panel animate-fade-up">
+          <MapPin className="h-4 w-4 text-marmaray" />
+          {t(pickTarget === 'from' ? 'journey.pickFromMap' : 'journey.pickToMap')}
+          <button
+            type="button"
+            onClick={() => setPickTarget(null)}
+            className="rounded-lg px-2 py-1 text-[11px] text-mist-400 hover:bg-ink-800 hover:text-mist-50"
+          >
+            {t('common.cancel')}
+          </button>
+        </div>
+      )}
 
       {selectedStation && (
         <div className="glass absolute bottom-4 right-4 z-20 max-w-[50%] truncate rounded-full px-3 py-1.5 text-[11px] text-mist-300 shadow-panel sm:hidden">

@@ -1,8 +1,8 @@
 {
-  "name": "Rayda — Marmaray Live",
+  "name": "Rayda — İstanbul raylı sistem",
   "short_name": "Rayda",
-  "description": "Live timetable simulation of Istanbul's Marmaray line with train positions, station departures and journey planning.",
-  "description_tr": "İstanbul Marmaray hattı için canlı tarife simülasyonu: tren konumları, istasyon kalkışları ve yolculuk planlama.",
+  "description": "Timetable-based map of Istanbul rail: Marmaray and Metro İstanbul lines, train positions, station departures and journey planning.",
+  "description_tr": "İstanbul raylı sistem haritası: Marmaray ve Metro İstanbul hatları, tren konumları, istasyon kalkışları ve yolculuk planlama.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
