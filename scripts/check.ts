@@ -35,5 +35,8 @@ const maltepe = planJourney('288', '19025', at('08:00'), 6);
 const viaBridge = maltepe.find((option) => option.alternative);
 assert.ok(viaBridge?.legs.some((leg) => leg.kind === 'ride' && leg.lineId === 'MB'));
 assert.equal(new Set(maltepe.map((option) => option.id)).size, maltepe.length);
+// At most one transfer more than the fastest route.
+const taksim = planJourney('18996', '19007', at('17:30'), 6);
+assert.ok(taksim.every((option) => option.transfers <= taksim[0].transfers + 1));
 
 console.log('check: ok');

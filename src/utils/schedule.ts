@@ -539,7 +539,8 @@ const routeSignature = (legs: JourneyLeg[]) =>
 
 /**
  * Other ways to go: plan again with one transfer stop or one line of the best
- * journey ruled out, keeping distinct routes that arrive at most 25 min later.
+ * journey ruled out, keeping distinct routes that arrive at most 25 min later
+ * with at most one more transfer.
  */
 function alternativeJourneys(
   fromStationId: string,
@@ -565,6 +566,7 @@ function alternativeJourneys(
     if (!legs || seen.has(routeSignature(legs))) continue;
     const option = toOption(legs, now, true);
     if (option.arrivalTime.getTime() - best.arrivalTime.getTime() > ALTERNATIVE_SLACK_MS) continue;
+    if (option.transfers > best.transfers + 1) continue;
     seen.add(routeSignature(legs));
     found.push(option);
   }
