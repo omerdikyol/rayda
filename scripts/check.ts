@@ -38,5 +38,8 @@ assert.equal(new Set(maltepe.map((option) => option.id)).size, maltepe.length);
 // At most one transfer more than the fastest route.
 const taksim = planJourney('18996', '19007', at('17:30'), 6);
 assert.ok(taksim.every((option) => option.transfers <= taksim[0].transfers + 1));
+// Window scales with the fastest trip: a quarter of 28 min drops routes 18 min slower.
+const fastest = taksim[0].arrivalTime.getTime();
+assert.ok(taksim.every((option) => !option.alternative || option.arrivalTime.getTime() - fastest <= 7 * 60_000));
 
 console.log('check: ok');

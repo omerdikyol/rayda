@@ -27,7 +27,6 @@ const MINUTE_MS = 60_000;
 const CHANGE_MS = 60_000;
 const JOURNEY_HORIZON_MS = 8 * 60 * MINUTE_MS;
 const MAX_TRANSFER_WAIT_MS = 60 * MINUTE_MS;
-const ALTERNATIVE_SLACK_MS = 25 * MINUTE_MS;
 
 export { stationById };
 
@@ -539,8 +538,8 @@ const routeSignature = (legs: JourneyLeg[]) =>
 
 /**
  * Other ways to go: plan again with one transfer stop or one line of the best
- * journey ruled out, keeping distinct routes that arrive at most 25 min later
- * with at most one more transfer.
+ * journey ruled out, keeping distinct routes that arrive soon after it (a
+ * quarter of its duration, 5–25 min) with at most one more transfer.
  */
 function alternativeJourneys(
   fromStationId: string,
@@ -558,6 +557,8 @@ function alternativeJourneys(
   const sources = stationGroup(fromStationId);
   const targets = stationGroup(toStationId);
   const connections = connectionsFrom(now);
+  // A quarter of the fastest trip, between 5 and 25 min: 7 min on a 28 min trip, 17 on 68.
+  const slack = Math.min(25, Math.max(5, best.durationSeconds / 60 / 4)) * MINUTE_MS;
   const seen = new Set(options.map((option) => routeSignature(option.legs)));
   const found: JourneyOption[] = [];
 
@@ -565,7 +566,7 @@ function alternativeJourneys(
     const legs = earliestJourney(sources, targets, now.getTime() - 30_000, connections, banned);
     if (!legs || seen.has(routeSignature(legs))) continue;
     const option = toOption(legs, now, true);
-    if (option.arrivalTime.getTime() - best.arrivalTime.getTime() > ALTERNATIVE_SLACK_MS) continue;
+    if (option.arrivalTime.getTime() - best.arrivalTime.getTime() > slack) continue;
     if (option.transfers > best.transfers + 1) continue;
     seen.add(routeSignature(legs));
     found.push(option);
