@@ -30,4 +30,10 @@ assert.equal(rides('mb290606', '19007', '08:00')?.[0], 'MB');
 // Runs through the night when rail is closed.
 assert.deepEqual(rides('mb659267', 'mb5249996', '03:30'), ['MB']);
 
+// Alternatives: Maltepe → Hacıosman also offers Metrobüs across the bridge instead of changing at Yenikapı.
+const maltepe = planJourney('288', '19025', at('08:00'), 6);
+const viaBridge = maltepe.find((option) => option.alternative);
+assert.ok(viaBridge?.legs.some((leg) => leg.kind === 'ride' && leg.lineId === 'MB'));
+assert.equal(new Set(maltepe.map((option) => option.id)).size, maltepe.length);
+
 console.log('check: ok');

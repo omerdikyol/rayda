@@ -27,6 +27,7 @@ const MINUTE_MS = 60_000;
 const CHANGE_MS = 60_000;
 const JOURNEY_HORIZON_MS = 8 * 60 * MINUTE_MS;
 const MAX_TRANSFER_WAIT_MS = 60 * MINUTE_MS;
+const ALTERNATIVE_SLACK_MS = 25 * MINUTE_MS;
 
 export { stationById };
 
@@ -377,7 +378,8 @@ function earliestJourney(
   sources: string[],
   targets: string[],
   t0: number,
-  connections: Connection[]
+  connections: Connection[],
+  banned: Set<string> = new Set() // line ids, and platforms where no train may be boarded
 ): JourneyLeg[] | null {
   const arrival = new Map<string, number>(sources.map((id) => [id, t0]));
   const reached = new Map<string, Reached>();
@@ -399,6 +401,7 @@ function earliestJourney(
     const trip = c.run.departure.key;
 
     if (!boarded.has(trip)) {
+      if (banned.has(c.run.route.lineId) || banned.has(c.from)) continue;
       const ready = arrival.get(c.from);
       if (ready === undefined) continue;
       const via = reached.get(c.from);
@@ -412,7 +415,7 @@ function earliestJourney(
     reached.set(c.to, { kind: 'ride', enter: boarded.get(trip)!, exit: c });
     if (targetSet.has(c.to)) best = Math.min(best, c.arr);
 
-    for (const link of walkLinks.get(c.to) ?? []) {
+    for (const link of banned.has(c.to) ? [] : (walkLinks.get(c.to) ?? [])) {
       const time = c.arr + link.seconds * 1000;
       if (time < (arrival.get(link.to) ?? Infinity)) {
         arrival.set(link.to, time);
@@ -469,6 +472,7 @@ export function planJourney(
   if (cached) return cached;
   if (journeyCache.size > 32) journeyCache.clear();
   const options = searchJourneys(fromStationId, toStationId, now, limit);
+  options.push(...alternativeJourneys(fromStationId, toStationId, now, options));
   journeyCache.set(cacheKey, options);
   return options;
 }
@@ -506,18 +510,63 @@ function searchJourneys(
     ) {
       options.pop();
     }
-    options.push({
-      id: rides.map((leg) => `${leg.routeId}@${leg.departureTime.getTime()}`).join('+'),
-      departureTime,
-      arrivalTime,
-      waitMinutes: Math.max(0, Math.ceil((departureTime.getTime() - now.getTime()) / MINUTE_MS)),
-      durationSeconds: (arrivalTime.getTime() - departureTime.getTime()) / 1000,
-      fromStationId: rides[0].fromStationId,
-      toStationId: rides[rides.length - 1].toStationId,
-      legs,
-      transfers: rides.length - 1,
-    });
+    options.push(toOption(legs, now));
   }
 
   return options.slice(0, limit);
+}
+
+function toOption(legs: JourneyLeg[], now: Date, alternative = false): JourneyOption {
+  const rides = legs.filter((leg) => leg.kind === 'ride');
+  const departureTime = rides[0].departureTime;
+  const arrivalTime = rides[rides.length - 1].arrivalTime;
+  return {
+    id: rides.map((leg) => `${leg.routeId}@${leg.departureTime.getTime()}`).join('+'),
+    departureTime,
+    arrivalTime,
+    waitMinutes: Math.max(0, Math.ceil((departureTime.getTime() - now.getTime()) / MINUTE_MS)),
+    durationSeconds: (arrivalTime.getTime() - departureTime.getTime()) / 1000,
+    fromStationId: rides[0].fromStationId,
+    toStationId: rides[rides.length - 1].toStationId,
+    legs,
+    transfers: rides.length - 1,
+    alternative,
+  };
+}
+
+const routeSignature = (legs: JourneyLeg[]) =>
+  legs.map((leg) => (leg.kind === 'ride' ? `${leg.lineId}:${leg.fromStationId}` : '')).join('|');
+
+/**
+ * Other ways to go: plan again with one transfer stop or one line of the best
+ * journey ruled out, keeping distinct routes that arrive at most 25 min later.
+ */
+function alternativeJourneys(
+  fromStationId: string,
+  toStationId: string,
+  now: Date,
+  options: JourneyOption[]
+): JourneyOption[] {
+  const best = options[0];
+  if (!best) return [];
+  const rides = best.legs.filter((leg) => leg.kind === 'ride');
+  const bans = [
+    ...rides.slice(1).map((ride) => new Set(stationGroup(ride.fromStationId))),
+    ...rides.map((ride) => new Set([ride.lineId])),
+  ];
+  const sources = stationGroup(fromStationId);
+  const targets = stationGroup(toStationId);
+  const connections = connectionsFrom(now);
+  const seen = new Set(options.map((option) => routeSignature(option.legs)));
+  const found: JourneyOption[] = [];
+
+  for (const banned of bans) {
+    const legs = earliestJourney(sources, targets, now.getTime() - 30_000, connections, banned);
+    if (!legs || seen.has(routeSignature(legs))) continue;
+    const option = toOption(legs, now, true);
+    if (option.arrivalTime.getTime() - best.arrivalTime.getTime() > ALTERNATIVE_SLACK_MS) continue;
+    seen.add(routeSignature(legs));
+    found.push(option);
+  }
+  return found.sort((a, b) => a.arrivalTime.getTime() - b.arrivalTime.getTime()).slice(0, 3);
 }

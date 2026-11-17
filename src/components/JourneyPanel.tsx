@@ -57,7 +57,8 @@ function LegRow({ leg }: { leg: JourneyLeg }) {
       <li className="flex items-center gap-2.5 py-2 pl-0.5 text-[11px] text-mist-500">
         <Footprints className="h-3.5 w-3.5 shrink-0" />
         <span>
-          {t('journey.walk')} · {line?.code} {t('journey.platform')} · {formatDuration(leg.seconds, language)}
+          {t('journey.walk')} · {line?.code} {t('journey.platform')} ·{' '}
+          {formatDuration(leg.seconds, language)}
         </span>
       </li>
     );
@@ -68,8 +69,14 @@ function LegRow({ leg }: { leg: JourneyLeg }) {
   return (
     <li className="flex gap-3 py-1.5">
       <div className="flex flex-col items-center pt-1.5">
-        <span className="h-2.5 w-2.5 rounded-full border-2 bg-ink-900" style={{ borderColor: leg.routeColor }} />
-        <span className="my-1 w-0.5 flex-1 rounded-full" style={{ backgroundColor: leg.routeColor }} />
+        <span
+          className="h-2.5 w-2.5 rounded-full border-2 bg-ink-900"
+          style={{ borderColor: leg.routeColor }}
+        />
+        <span
+          className="my-1 w-0.5 flex-1 rounded-full"
+          style={{ backgroundColor: leg.routeColor }}
+        />
         <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: leg.routeColor }} />
       </div>
       <div className="min-w-0 flex-1 space-y-2">
@@ -89,8 +96,7 @@ function LegRow({ leg }: { leg: JourneyLeg }) {
             {language === 'tr'
               ? `${destination?.name} ${t('map.towards')}`
               : `${t('map.towards')} ${destination?.name}`}{' '}
-            · {leg.stationIds.length - 1}{' '}
-            {t('journey.stops')}
+            · {leg.stationIds.length - 1} {t('journey.stops')}
             {approx && ` · ${t('journey.estimated')}`}
           </span>
         </div>
@@ -120,7 +126,6 @@ export default function JourneyPanel({ compact = false }: { compact?: boolean })
   const selectedOptionId = useAppStore((state) => state.journeyOptionId);
   const selectJourney = useAppStore((state) => state.selectJourney);
 
-
   const options = useMemo(
     () =>
       fromStationId && toStationId && fromStationId !== toStationId
@@ -137,17 +142,66 @@ export default function JourneyPanel({ compact = false }: { compact?: boolean })
     [fromStationId, now]
   );
 
+  const regular = options.filter((option) => !option.alternative).slice(0, 4);
+  const alternatives = options.filter((option) => option.alternative);
+  const renderOption = (option: JourneyOption) => {
+    const active = option.id === activeOption?.id;
+    return (
+      <button
+        key={option.id}
+        type="button"
+        onClick={() => selectJourney(option.id)}
+        className={`w-full rounded-xl border p-3 text-left transition ${
+          active
+            ? 'border-marmaray/50 bg-marmaray/8 shadow-[0_0_0_1px_rgba(76,141,255,0.12)]'
+            : 'border-ink-700 bg-ink-850/50 hover:border-ink-500 hover:bg-ink-850'
+        }`}
+      >
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-baseline gap-2">
+            <span className="font-mono text-[15px] font-semibold tabular text-mist-50">
+              {formatTime(option.departureTime)}
+            </span>
+            <ArrowRight className="h-3.5 w-3.5 text-mist-500" />
+            <span className="font-mono text-[15px] font-semibold tabular text-mist-200">
+              {approxOption(option)}
+              {formatTime(option.arrivalTime)}
+            </span>
+          </div>
+          <span className="shrink-0 text-[11px] font-medium text-mist-400">
+            {approxOption(option)}
+            {formatDuration(option.durationSeconds, language)}
+          </span>
+        </div>
+
+        <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
+          {option.legs.map((leg, index) =>
+            leg.kind === 'ride' ? (
+              <LineChip key={index} lineId={leg.lineId} color={leg.routeColor} />
+            ) : null
+          )}
+          <span className="text-mist-500">
+            {option.transfers === 0
+              ? t('journey.direct')
+              : `${option.transfers} ${t('journey.transfer')}`}
+          </span>
+          <span className="text-mist-600">·</span>
+          <span className="text-mist-500">
+            {option.waitMinutes <= 0
+              ? t('common.now')
+              : `${t('journey.wait')} ${formatMinutesAway(option.waitMinutes, language)}`}
+          </span>
+        </div>
+      </button>
+    );
+  };
+
   const sameStation = Boolean(fromStationId && toStationId && fromStationId === toStationId);
   const hasBoth = Boolean(fromStationId && toStationId);
 
-
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div
-        className={`shrink-0 border-b border-ink-700/60 px-4 pb-3 ${
-          compact ? 'pt-2' : 'pt-4'
-        }`}
-      >
+      <div className={`shrink-0 border-b border-ink-700/60 px-4 pb-3 ${compact ? 'pt-2' : 'pt-4'}`}>
         {!compact && (
           <div className="flex items-start justify-between">
             <div>
@@ -155,9 +209,7 @@ export default function JourneyPanel({ compact = false }: { compact?: boolean })
                 <RouteIcon className="h-3 w-3 text-mint" />
                 {t('journey.subtitle')}
               </div>
-              <h2 className="mt-1 text-[18px] font-semibold text-mist-50">
-                {t('journey.title')}
-              </h2>
+              <h2 className="mt-1 text-[18px] font-semibold text-mist-50">{t('journey.title')}</h2>
             </div>
           </div>
         )}
@@ -211,70 +263,27 @@ export default function JourneyPanel({ compact = false }: { compact?: boolean })
         ) : (
           <div className="space-y-4 px-4 py-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-[11px] font-semibold text-mist-500">
-                {t('journey.results')}
-              </h3>
-              <span className="font-mono text-[11px] text-mist-500">{options.length}</span>
+              <h3 className="text-[11px] font-semibold text-mist-500">{t('journey.results')}</h3>
+              <span className="font-mono text-[11px] text-mist-500">{regular.length}</span>
             </div>
 
-            <div className="space-y-2">
-              {options.slice(0, 4).map((option) => {
-                const active = option.id === activeOption?.id;
-                return (
-                  <button
-                    key={option.id}
-                    type="button"
-                    onClick={() => selectJourney(option.id)}
-                    className={`w-full rounded-xl border p-3 text-left transition ${
-                      active
-                        ? 'border-marmaray/50 bg-marmaray/8 shadow-[0_0_0_1px_rgba(76,141,255,0.12)]'
-                        : 'border-ink-700 bg-ink-850/50 hover:border-ink-500 hover:bg-ink-850'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-baseline gap-2">
-                        <span className="font-mono text-[15px] font-semibold tabular text-mist-50">
-                          {formatTime(option.departureTime)}
-                        </span>
-                        <ArrowRight className="h-3.5 w-3.5 text-mist-500" />
-                        <span className="font-mono text-[15px] font-semibold tabular text-mist-200">
-                          {approxOption(option)}
-                          {formatTime(option.arrivalTime)}
-                        </span>
-                      </div>
-                      <span className="shrink-0 text-[11px] font-medium text-mist-400">
-                        {approxOption(option)}
-                        {formatDuration(option.durationSeconds, language)}
-                      </span>
-                    </div>
+            <div className="space-y-2">{regular.map(renderOption)}</div>
 
-                    <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
-                      {option.legs.map((leg, index) =>
-                        leg.kind === 'ride' ? (
-                          <LineChip key={index} lineId={leg.lineId} color={leg.routeColor} />
-                        ) : null
-                      )}
-                      <span className="text-mist-500">
-                        {option.transfers === 0
-                          ? t('journey.direct')
-                          : `${option.transfers} ${t('journey.transfer')}`}
-                      </span>
-                      <span className="text-mist-600">·</span>
-                      <span className="text-mist-500">
-                        {option.waitMinutes <= 0
-                          ? t('common.now')
-                          : `${t('journey.wait')} ${formatMinutesAway(option.waitMinutes, language)}`}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+            {alternatives.length > 0 && (
+              <div className="space-y-2">
+                <h3 className="text-[11px] font-semibold text-mist-500">
+                  {t('journey.alternatives')}
+                </h3>
+                {alternatives.map(renderOption)}
+              </div>
+            )}
 
             {activeOption && (
               <div className="overflow-hidden rounded-xl border border-ink-700 bg-ink-850/60">
                 <div className="flex items-center justify-between border-b border-ink-700/70 px-3.5 py-2.5">
-                  <span className="text-[11px] font-semibold text-mist-500">{t('journey.yourTrip')}</span>
+                  <span className="text-[11px] font-semibold text-mist-500">
+                    {t('journey.yourTrip')}
+                  </span>
                   <span className="font-mono text-[11px] font-medium tabular text-mist-300">
                     {approxOption(activeOption)}
                     {formatDuration(activeOption.durationSeconds, language)}
@@ -290,7 +299,6 @@ export default function JourneyPanel({ compact = false }: { compact?: boolean })
           </div>
         )}
       </div>
-
     </div>
   );
 }

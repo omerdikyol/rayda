@@ -162,4 +162,5 @@ export interface JourneyOption {
   toStationId: string;
   legs: JourneyLeg[];
   transfers: number;
+  alternative: boolean; // a different route, not the next departure of the best one
 }
