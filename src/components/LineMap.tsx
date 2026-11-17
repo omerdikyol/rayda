@@ -491,7 +491,8 @@ export default function LineMap() {
               fill="none"
               stroke={line.color}
               strokeOpacity={dim(journeyLineIds.includes(line.id))}
-              strokeWidth={4}
+              strokeWidth={line.estimated ? 3 : 4}
+              strokeDasharray={line.estimated ? '6 4' : undefined}
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
@@ -772,7 +773,9 @@ export default function LineMap() {
             <ArrowRight className="h-3.5 w-3.5 shrink-0 text-mist-500" />
             <span className="truncate font-medium text-mist-50">{stationById.get(journey.toStationId)?.name}</span>
             <span className="shrink-0 font-mono text-[11px] text-mist-400">
-              {formatTime(journey.departureTime)} · {formatDuration(journey.durationSeconds, language)}
+              {formatTime(journey.departureTime)} ·{' '}
+              {journey.legs.some((leg) => leg.kind === 'ride' && lineById.get(leg.lineId)?.estimated) && '~'}
+              {formatDuration(journey.durationSeconds, language)}
             </span>
           </div>
           <button

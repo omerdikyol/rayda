@@ -1,5 +1,6 @@
 import type { Route } from '../types';
 import { metroRoutes } from './metro';
+import { metrobusRoutes } from './metrobus';
 
 /**
  * Marmaray service patterns.
@@ -91,6 +92,6 @@ const marmarayRoutes: Route[] = [
   },
 ];
 
-export const routes: Route[] = [...marmarayRoutes, ...metroRoutes];
+export const routes: Route[] = [...marmarayRoutes, ...metroRoutes, ...metrobusRoutes];
 
 export const routeById = new Map(routes.map((route) => [route.id, route]));

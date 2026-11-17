@@ -1,6 +1,7 @@
 import { routes } from './routes';
 import { stations } from './stations';
 import { metroLines, metroSharedStops } from './metro';
+import { metrobusLine } from './metrobus';
 import { haversineKm } from '../utils/geo';
 import type { Interchange, Line, Station } from '../types';
 
@@ -22,9 +23,12 @@ export const lines: Line[] = [
     stationIds: longestRoute('marmaray'),
   },
   ...metroLines,
+  metrobusLine,
 ];
 
 export const lineById = new Map(lines.map((line) => [line.id, line]));
+
+export const isEstimated = (lineId: string) => Boolean(lineById.get(lineId)?.estimated);
 
 function mergeGroups(groups: string[][]): Interchange[] {
   const merged: Set<string>[] = [];
@@ -65,6 +69,23 @@ export const interchanges: Interchange[] = mergeGroups([
   ['18977', '272189'], // Kozyatağı
   ['19007', '19037'], // Kadıköy ↔ İskele Cami
   ['18992', '94833'], // Seyrantepe
+  // Metrobüs: stops within a short walk of a rail platform
+  ['mb810010', '273'], // Küçükçekmece
+  ['mb810021', '18973'], // Yenibosna
+  ['mb810020', '18974'], // Şirinevler ↔ Ataköy - Şirinevler
+  ['mb810019', '18965'], // Bahçelievler
+  ['mb810018', '18961'], // İncirli ↔ Bakırköy - İncirli
+  ['mb810022', '18959'], // Zeytinburnu
+  ['mb810005', '18960'], // Merter
+  ['mb810024', '19065'], // Cevizlibağ
+  ['mb810012', '19091'], // Topkapı
+  ['mb292219', '19050'], // Edirnekapı ↔ Şehitlik
+  ['mb810015', '272169'], // Çağlayan
+  ['mb810014', '94908'], // Mecidiyeköy
+  ['mb659267', '19018'], // Zincirlikuyu ↔ Gayrettepe
+  ['mb806908', '87259'], // Altunizade
+  ['mb806857', '18995'], // Uzunçayır ↔ Ünalan
+  ['mb5249996', '297'], // Söğütlüçeşme
   ...metroSharedStops,
 ]);
 

@@ -5,7 +5,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useAppStore } from '../stores/appStore';
 import type { Line } from '../types';
 
-const MODES: Line['mode'][] = ['rail', 'metro', 'tram', 'funicular', 'cable'];
+const MODES: Line['mode'][] = ['rail', 'metro', 'tram', 'funicular', 'cable', 'bus'];
 
 export default function LineFilter({ journeyLineIds }: { journeyLineIds: string[] }) {
   const { t } = useLanguage();

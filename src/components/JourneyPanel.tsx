@@ -4,11 +4,11 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useTransit } from '../contexts/TransitContext';
 import { useAppStore } from '../stores/appStore';
 import { getStationArrivals, planJourney } from '../utils/schedule';
-import { lineById, stationById } from '../data/network';
+import { isEstimated, lineById, stationById } from '../data/network';
 import { formatDuration, formatMinutesAway } from '../utils/format';
 import { formatTime } from '../utils/time';
 import { routeShortName } from '../utils/labels';
-import type { JourneyLeg } from '../types';
+import type { JourneyLeg, JourneyOption } from '../types';
 import StationPicker from './StationPicker';
 import { JourneyIntro } from './Onboarding';
 
@@ -45,6 +45,9 @@ function LineChip({ lineId, color }: { lineId: string; color: string }) {
   );
 }
 
+const approxOption = (option: JourneyOption) =>
+  option.legs.some((leg) => leg.kind === 'ride' && isEstimated(leg.lineId)) ? '~' : '';
+
 function LegRow({ leg }: { leg: JourneyLeg }) {
   const { t, language } = useLanguage();
 
@@ -61,6 +64,7 @@ function LegRow({ leg }: { leg: JourneyLeg }) {
   }
 
   const destination = stationById.get(leg.stationIds[leg.stationIds.length - 1]);
+  const approx = isEstimated(leg.lineId) ? '~' : '';
   return (
     <li className="flex gap-3 py-1.5">
       <div className="flex flex-col items-center pt-1.5">
@@ -74,6 +78,7 @@ function LegRow({ leg }: { leg: JourneyLeg }) {
             {stationById.get(leg.fromStationId)?.name}
           </span>
           <span className="font-mono text-[13px] font-semibold tabular text-mist-50">
+            {approx}
             {formatTime(leg.departureTime)}
           </span>
         </div>
@@ -86,6 +91,7 @@ function LegRow({ leg }: { leg: JourneyLeg }) {
               : `${t('map.towards')} ${destination?.name}`}{' '}
             · {leg.stationIds.length - 1}{' '}
             {t('journey.stops')}
+            {approx && ` · ${t('journey.estimated')}`}
           </span>
         </div>
         <div className="flex items-start justify-between gap-2">
@@ -93,6 +99,7 @@ function LegRow({ leg }: { leg: JourneyLeg }) {
             {stationById.get(leg.toStationId)?.name}
           </span>
           <span className="font-mono text-[13px] font-semibold tabular text-mist-50">
+            {approx}
             {formatTime(leg.arrivalTime)}
           </span>
         </div>
@@ -231,10 +238,12 @@ export default function JourneyPanel({ compact = false }: { compact?: boolean })
                         </span>
                         <ArrowRight className="h-3.5 w-3.5 text-mist-500" />
                         <span className="font-mono text-[15px] font-semibold tabular text-mist-200">
+                          {approxOption(option)}
                           {formatTime(option.arrivalTime)}
                         </span>
                       </div>
                       <span className="shrink-0 text-[11px] font-medium text-mist-400">
+                        {approxOption(option)}
                         {formatDuration(option.durationSeconds, language)}
                       </span>
                     </div>
@@ -267,6 +276,7 @@ export default function JourneyPanel({ compact = false }: { compact?: boolean })
                 <div className="flex items-center justify-between border-b border-ink-700/70 px-3.5 py-2.5">
                   <span className="text-[11px] font-semibold text-mist-500">{t('journey.yourTrip')}</span>
                   <span className="font-mono text-[11px] font-medium tabular text-mist-300">
+                    {approxOption(activeOption)}
                     {formatDuration(activeOption.durationSeconds, language)}
                   </span>
                 </div>

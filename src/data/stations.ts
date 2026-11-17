@@ -1,5 +1,6 @@
 import type { Station } from '../types';
 import { metroStations } from './metro';
+import { metrobusStations } from './metrobus';
 
 // Marmaray station data from Istanbul Metropolitan Municipality GTFS
 // All 43 stations from Halkalı (European side) to Gebze (Asian side)
@@ -308,4 +309,4 @@ const marmarayStations: Station[] = [
   }
 ];
 
-export const stations: Station[] = [...marmarayStations, ...metroStations];
+export const stations: Station[] = [...marmarayStations, ...metroStations, ...metrobusStations];

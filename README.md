@@ -1,6 +1,6 @@
 # Rayda — Marmaray, live.
 
-A timetable-driven live map of Istanbul rail: Marmaray plus the metro, tram, funicular and cable-car lines. Rayda reconstructs every train from published timetables and inter-station run times, then turns that into a fast, installable dashboard: animated trains, station departure boards, and a journey planner with transfers.
+A timetable-driven live map of Istanbul rail: Marmaray plus the metro, tram, funicular and cable-car lines, and Metrobüs for journey planning. Rayda reconstructs every train from published timetables and inter-station run times, then turns that into a fast, installable dashboard: animated trains, station departure boards, and a journey planner with transfers.
 
 **Open the app → [rayda.omerdikyol.com](https://rayda.omerdikyol.com)**
 
@@ -35,6 +35,7 @@ The engine is **stateless**: trains are derived from the clock on every tick. Th
 - Station names, coordinates, and distances: Istanbul Metropolitan Municipality GTFS.
 - Service windows and headways: official Marmaray timetable data.
 - Metro, tram, funicular and cable-car lines: the IMM public transport GTFS feed (IMM Open Data Licence), converted by `scripts/import-metro.py` into `src/data/metro.ts`.
+- Metrobüs: the IETT GTFS feed (IMM Open Data Licence), converted by `scripts/import-metrobus.py` into `src/data/metrobus.ts`. The feed only times the termini, so stop-to-stop times are estimated and shown with `~`; buses are not drawn on the map.
 - Inter-station run times: directed times in [`src/data/interStationTimes.ts`](src/data/interStationTimes.ts), taken from the official timetable: 107 minutes Halkalı → Gebze, 108 minutes Gebze → Halkalı, 63 minutes Ataköy ↔ Pendik.
 
 Times are estimates. Use Rayda to explore the network and plan around the timetable, not as an operational source during disruption.
@@ -47,6 +48,7 @@ npm run dev        # local development
 npm run build      # typecheck + production build
 npm run typecheck  # TypeScript only
 npm run lint       # ESLint
+npm test           # engine smoke checks
 npm run preview    # preview the production build
 ```
 

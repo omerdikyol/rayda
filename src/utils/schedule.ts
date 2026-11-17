@@ -1,6 +1,6 @@
 import { routeById, routes } from '../data/routes';
 import { interStationTimes } from '../data/interStationTimes';
-import { interchanges, lineById, stationById, stationGroup, walkSeconds } from '../data/network';
+import { interchanges, isEstimated, lineById, stationById, stationGroup, walkSeconds } from '../data/network';
 import type {
   Arrival,
   Direction,
@@ -210,6 +210,7 @@ function positionForRun(run: Run, now: Date): TrainPosition | null {
 export function getActiveTrains(now: Date): TrainPosition[] {
   const trains: TrainPosition[] = [];
   for (const run of runsNear(now, 1, 0)) {
+    if (isEstimated(run.route.lineId)) continue;
     const position = positionForRun(run, now);
     if (position) trains.push(position);
   }
@@ -269,7 +270,8 @@ export function getNetworkStatus(now: Date, trains: TrainPosition[]): NetworkSta
   }
 
   let nextDeparture: Date | null = null;
-  for (const { departure } of runsNear(now, 0, 1)) {
+  for (const { departure, route } of runsNear(now, 0, 1)) {
+    if (isEstimated(route.lineId)) continue;
     const time = departure.departureTime.getTime();
     if (time <= now.getTime()) continue;
     if (!nextDeparture || time < nextDeparture.getTime()) nextDeparture = departure.departureTime;

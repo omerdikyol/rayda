@@ -4,7 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useTransit } from '../contexts/TransitContext';
 import { useAppStore } from '../stores/appStore';
 import { getStationArrivals } from '../utils/schedule';
-import { lineById, stationLines } from '../data/network';
+import { isEstimated, lineById, stationLines } from '../data/network';
 import type { Arrival } from '../types';
 import { formatTime } from '../utils/time';
 import { routeShortName } from '../utils/labels';
@@ -165,6 +165,7 @@ export default function DeparturesPanel({ compact = false }: { compact?: boolean
               const [next, ...rest] = list;
               const minutes = next.minutesAway;
               const soon = minutes < 60;
+              const approx = isEstimated(next.lineId) ? '~' : '';
 
               return (
                 <li
@@ -193,19 +194,24 @@ export default function DeparturesPanel({ compact = false }: { compact?: boolean
                           <span className="text-[18px] font-semibold">{t('departures.now')}</span>
                         ) : soon ? (
                           <>
-                            <span className="text-[22px] font-semibold">{minutes}</span>
+                            <span className="text-[22px] font-semibold">
+                              {approx}
+                              {minutes}
+                            </span>
                             <span className="ml-0.5 text-[11px] font-medium text-mist-400">
                               {t('common.min')}
                             </span>
                           </>
                         ) : (
                           <span className="text-[18px] font-semibold">
+                            {approx}
                             {formatTime(next.arrivalTime)}
                           </span>
                         )}
                       </div>
                       {soon && (
                         <div className="mt-1 font-mono text-[11px] tabular text-mist-500">
+                          {approx}
                           {formatTime(next.arrivalTime)}
                         </div>
                       )}
@@ -218,6 +224,7 @@ export default function DeparturesPanel({ compact = false }: { compact?: boolean
                       <span className="flex min-w-0 gap-2.5 overflow-hidden font-mono tabular text-mist-300">
                         {rest.slice(0, 4).map((arrival, index) => (
                           <span key={`${arrival.id}-${index}`}>
+                            {approx}
                             {formatTime(arrival.arrivalTime)}
                           </span>
                         ))}

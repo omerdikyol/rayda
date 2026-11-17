@@ -56,6 +56,7 @@ export const translations = {
       tram: 'Tramvay',
       funicular: 'Füniküler',
       cable: 'Teleferik',
+      bus: 'Metrobüs',
     },
     departures: {
       title: 'Kalkışlar',
@@ -86,7 +87,7 @@ export const translations = {
     },
     journey: {
       title: 'Yolculuk',
-      subtitle: 'Raylı sistemle yol planla',
+      subtitle: 'Raylı sistem ve Metrobüsle yol planla',
       from: 'Nereden',
       to: 'Nereye',
       selectFrom: 'Kalkış istasyonu',
@@ -112,6 +113,7 @@ export const translations = {
       intermediate: 'ara durak',
       transfer: 'aktarma',
       walk: 'Yürü',
+      estimated: 'tahmini süre',
       platform: 'peronu',
       selectStation: 'İstasyon seç',
       leaveNow: 'Şimdi çık',
@@ -241,6 +243,7 @@ export const translations = {
       tram: 'Tram',
       funicular: 'Funicular',
       cable: 'Cable car',
+      bus: 'Metrobus',
     },
     departures: {
       title: 'Departures',
@@ -271,7 +274,7 @@ export const translations = {
     },
     journey: {
       title: 'Journey',
-      subtitle: 'Plan a trip by rail',
+      subtitle: 'Plan a trip by rail and Metrobus',
       from: 'From',
       to: 'To',
       selectFrom: 'Departure station',
@@ -297,6 +300,7 @@ export const translations = {
       intermediate: 'intermediate stops',
       transfer: 'transfer',
       walk: 'Walk',
+      estimated: 'estimated time',
       platform: 'platform',
       selectStation: 'Select station',
       leaveNow: 'Leave now',

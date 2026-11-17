@@ -1,5 +1,6 @@
 import type { InterStationTime } from '../types';
 import { metroInterStationTimes } from './metro';
+import { metrobusInterStationTimes } from './metrobus';
 
 /**
  * Directed run times in seconds, taken from consecutive stops of the last
@@ -96,4 +97,8 @@ const marmarayTimes: InterStationTime[] = [
   { fromStationId: '274', toStationId: '275', time: 180 }, // Mustafa Kemal → Halkalı (reverse run time; terminal arrival not in timetable)
 ];
 
-export const interStationTimes: InterStationTime[] = [...marmarayTimes, ...metroInterStationTimes];
+export const interStationTimes: InterStationTime[] = [
+  ...marmarayTimes,
+  ...metroInterStationTimes,
+  ...metrobusInterStationTimes,
+];

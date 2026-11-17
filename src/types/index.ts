@@ -10,8 +10,9 @@ export interface Line {
   id: string;
   code: string;
   name: string;
-  mode: 'rail' | 'metro' | 'tram' | 'funicular' | 'cable';
+  mode: 'rail' | 'metro' | 'tram' | 'funicular' | 'cable' | 'bus';
   color: string;
+  estimated?: boolean; // run times are estimates: no vehicles drawn, times shown with ~
   side?: 'europe' | 'asia';
   stationIds: string[]; // first to last terminus
 }
